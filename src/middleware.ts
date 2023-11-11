@@ -26,22 +26,24 @@ export default authMiddleware({
       }
     }
 
-    if (firstProject?.projects) {
-      const allProjects = metaData?.projects?.map(
-        (item: Project) => item.name
-      ) as Array<string>;
+    // if (firstProject?.projects) {
+    //   const allProjects = metaData?.projects?.map(
+    //     (item: Project) => item.name
+    //   ) as Array<string>;
 
-      const urlProject = req.nextUrl.pathname.split('/')[2]?.toString();
+    //   const urlProject = req.nextUrl.pathname.split('/')[2]?.toString();
 
-      if (auth.userId && !allProjects?.includes(urlProject)) {
-        return NextResponse.redirect(
-          new URL(
-            `/${firstProject.projects[0].id}/${firstProject.projects[0].name}/dashboard`,
-            req.url
-          )
-        );
-      }
-    }
+    //   console.log(urlProject);
+
+    //   if (auth.userId && !allProjects?.includes(urlProject)) {
+    //     return NextResponse.redirect(
+    //       new URL(
+    //         `/${firstProject.projects[0].id}/${firstProject.projects[0].name}/dashboard`,
+    //         req.url
+    //       )
+    //     );
+    //   }
+    // }
   },
 });
 

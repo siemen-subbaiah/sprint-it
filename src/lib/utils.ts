@@ -19,6 +19,16 @@ export const navLinks = (projectId: string, projectName: string) => {
     },
     {
       id: 3,
+      name: 'Board',
+      link: `/${projectId}/${projectName}/board`,
+    },
+    {
+      id: 4,
+      name: 'Sprints',
+      link: `/${projectId}/${projectName}/sprints`,
+    },
+    {
+      id: 5,
       name: 'Settings',
       link: `/${projectId}/${projectName}/settings`,
     },

@@ -20,6 +20,7 @@ model Project {
   prefix          String
   uniqueId        String            @unique @default(uuid())
   users           UsersOnProjects[]
+  sprints         Sprint[]
 }
 
 model User {
@@ -34,6 +35,42 @@ model User {
   bio           String?
   clerkUserId   String?
   projects      UsersOnProjects[]
+}
+
+model Sprint {
+  id                Int      @id @default(sequence())
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  createdUserId     String
+  createdUserName   String
+  sprintName        String
+  sprintDescription String
+  startDate         DateTime
+  endDate           DateTime
+  isInProgress      Boolean
+  isEnded           Boolean  @default(false)
+  project           Project  @relation(fields: [projectId], references: [uniqueId])
+  projectId         String
+  tasks             Task[]
+}
+
+model Task {
+  id              Int      @id @default(sequence())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdUserId   String
+  createdUserName String
+  itemName        String
+  itemDescription String
+  assignedUserId  String
+  isInBacklog     Boolean
+  sprint          Sprint?  @relation(fields: [sprintId], references: [id])
+  sprintId        Int?
+  projectId       String
+  estimatedPoints Int
+  status          Int
+  priority        Int
+  itemType        Int
 }
 
 model UsersOnProjects {

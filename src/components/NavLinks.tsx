@@ -47,7 +47,7 @@ const NavLinks = ({ userId }: { userId: string | null }) => {
             className='md:hidden absolute right-[10px] top-[30px]'
             onClick={() => setToggle(!toggle)}
           />
-          <ul className='items-center gap-4 md:flex hidden'>
+          <ul className='items-center gap-6 md:flex hidden'>
             {navLinks(currentProjectId, currentProjectName).map((item) => {
               return (
                 <li key={item.id}>

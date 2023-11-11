@@ -23,3 +23,8 @@ interface PrismaUser {
   bio: string | null;
   clerkUserId: string | null;
 }
+
+type Params = {
+  projectId: string;
+  projectName: string;
+};
