@@ -32,11 +32,7 @@ export const status = [
   },
   {
     id: '4',
-    name: 'Code review',
-  },
-  {
-    id: '5',
-    name: 'Testing',
+    name: 'Done',
   },
 ];
 
@@ -62,4 +58,31 @@ for (let i = 1; i <= 20; i++) {
     id: i.toString(),
     name: i.toString(),
   });
+}
+
+export enum Priority {
+  None = 1,
+  Low,
+  Medium,
+  High,
+}
+
+export enum Status {
+  'To do' = 1,
+  'In progress',
+  'Blocked',
+  'Done',
+}
+
+export enum Type {
+  'Task' = 1,
+  'Bug',
+  'Story',
+}
+
+export enum PriorityColor {
+  '#5E6C84' = 1,
+  '#0E721E',
+  '#FFA10A',
+  '#B71A35',
 }

@@ -12,8 +12,8 @@ dependencies:
     specifier: ^1.7.9
     version: 1.7.9(react@18.2.0)
   '@prisma/client':
-    specifier: 5.5.2
-    version: 5.5.2(prisma@5.3.1)
+    specifier: 5.6.0
+    version: 5.6.0(prisma@5.3.1)
   '@radix-ui/react-avatar':
     specifier: ^1.0.4
     version: 1.0.4(@types/react-dom@18.2.14)(@types/react@18.2.35)(react-dom@18.2.0)(react@18.2.0)
@@ -59,6 +59,9 @@ dependencies:
   class-variance-authority:
     specifier: ^0.7.0
     version: 0.7.0
+  cloudinary:
+    specifier: ^1.41.0
+    version: 1.41.0
   clsx:
     specifier: ^2.0.0
     version: 2.0.0
@@ -80,6 +83,9 @@ dependencies:
   next:
     specifier: 14.0.1
     version: 14.0.1(react-dom@18.2.0)(react@18.2.0)
+  next-cloudinary:
+    specifier: ^5.6.0
+    version: 5.6.0(next@14.0.1)(react@18.2.0)
   next-themes:
     specifier: ^0.2.1
     version: 0.2.1(next@14.0.1)(react-dom@18.2.0)(react@18.2.0)
@@ -233,6 +239,29 @@ packages:
     engines: {node: '>=14'}
     dependencies:
       csstype: 3.1.1
+    dev: false
+
+  /@cloudinary-util/url-loader@3.15.0:
+    resolution: {integrity: sha512-1Xq/woN0cngKY9e1EBgClomkOSmEy+yriBYqy5FUelxc0bCCZXNTMpkhssdUVnMXJbm8TIOBmqgVfqH5u0/DtQ==}
+    dependencies:
+      '@cloudinary-util/util': 2.3.0
+      '@cloudinary/url-gen': 1.13.0
+    dev: false
+
+  /@cloudinary-util/util@2.3.0:
+    resolution: {integrity: sha512-0Gojd+ZRQjJQmlBEAa8Ua94amvx7uWHoUzVUEGi1S8bgF1wPcMqG07cSUGQfRwHsFQ/9XOesx76Df622E+CevA==}
+    dev: false
+
+  /@cloudinary/transformation-builder-sdk@1.8.0:
+    resolution: {integrity: sha512-/QLSDDI+rfYH3bFH+DpgEk8NgSoeqwiea9GW5VXplcpebQOOcFqOzNFM6Hlik3PDqq4JMP4s3E7BoPZ1Rdk/IQ==}
+    dependencies:
+      '@cloudinary/url-gen': 1.13.0
+    dev: false
+
+  /@cloudinary/url-gen@1.13.0:
+    resolution: {integrity: sha512-p7ASCX2fZw1JWtMG2ADd/Y0TfvE5SX9v0TDJDlzXX3OlNxLSuqzLWGgj5oJD4ZTo62FdxH24N8HPZ7NXEXtj5g==}
+    dependencies:
+      '@cloudinary/transformation-builder-sdk': 1.8.0
     dev: false
 
   /@eslint-community/eslint-utils@4.4.0(eslint@8.50.0):
@@ -488,8 +517,8 @@ packages:
       webcrypto-core: 1.7.7
     dev: false
 
-  /@prisma/client@5.5.2(prisma@5.3.1):
-    resolution: {integrity: sha512-54XkqR8M+fxbzYqe+bIXimYnkkcGqgOh0dn0yWtIk6CQT4IUCAvNFNcQZwk2KqaLU+/1PHTSWrcHtx4XjluR5w==}
+  /@prisma/client@5.6.0(prisma@5.3.1):
+    resolution: {integrity: sha512-mUDefQFa1wWqk4+JhKPYq8BdVoFk9NFMBXUI8jAkBfQTtgx8WPx02U2HB/XbAz3GSUJpeJOKJQtNvaAIDs6sug==}
     engines: {node: '>=16.13'}
     requiresBuild: true
     peerDependencies:
@@ -498,12 +527,12 @@ packages:
       prisma:
         optional: true
     dependencies:
-      '@prisma/engines-version': 5.5.1-1.aebc046ce8b88ebbcb45efe31cbe7d06fd6abc0a
+      '@prisma/engines-version': 5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee
       prisma: 5.3.1
     dev: false
 
-  /@prisma/engines-version@5.5.1-1.aebc046ce8b88ebbcb45efe31cbe7d06fd6abc0a:
-    resolution: {integrity: sha512-O+qHFnZvAyOFk1tUco2/VdiqS0ym42a3+6CYLScllmnpbyiTplgyLt2rK/B9BTjYkSHjrgMhkG47S0oqzdIckA==}
+  /@prisma/engines-version@5.6.0-32.e95e739751f42d8ca026f6b910f5a2dc5adeaeee:
+    resolution: {integrity: sha512-UoFgbV1awGL/3wXuUK3GDaX2SolqczeeJ5b4FVec9tzeGbSWJboPSbT0psSrmgYAKiKnkOPFSLlH6+b+IyOwAw==}
     dev: false
 
   /@prisma/engines@5.3.1:
@@ -1995,6 +2024,24 @@ packages:
     resolution: {integrity: sha512-IV3Ou0jSMzZrd3pZ48nLkT9DA7Ag1pnPzaiQhpW7c3RbcqqzvzzVu+L8gfqMp/8IM2MQtSiqaCxrrcfu8I8rMA==}
     dev: false
 
+  /cloudinary-core@2.13.0(lodash@4.17.21):
+    resolution: {integrity: sha512-Nt0Q5I2FtenmJghtC4YZ3MZZbGg1wLm84SsxcuVwZ83OyJqG9CNIGp86CiI6iDv3QobaqBUpOT7vg+HqY5HxEA==}
+    peerDependencies:
+      lodash: '>=4.0'
+    dependencies:
+      lodash: 4.17.21
+    dev: false
+
+  /cloudinary@1.41.0:
+    resolution: {integrity: sha512-qFf2McjvILJITePf4VF1PrY/8c2zy+/q5FVV6V3VWrP/gpIZsusPqXL4QZ6ZKXibPRukzMYqsQEhaSQgJHKKow==}
+    engines: {node: '>=0.6'}
+    dependencies:
+      cloudinary-core: 2.13.0(lodash@4.17.21)
+      core-js: 3.33.2
+      lodash: 4.17.21
+      q: 1.5.1
+    dev: false
+
   /clsx@2.0.0:
     resolution: {integrity: sha512-rQ1+kcj+ttHG0MKVGBUXwayCCF1oh39BF5COIpRzuCEv8Mwjv0XucrI2ExNTOn9IlLifGClWQcU9BrZORvtw6Q==}
     engines: {node: '>=6'}
@@ -2048,6 +2095,11 @@ packages:
   /cookie@0.5.0:
     resolution: {integrity: sha512-YZ3GUyn/o8gfKJlnlX7g7xq4gyO6OSuhGPKaaGssGB2qgDUS0gPgtTvoyZLTt9Ab6dC4hfc9dV5arkvc/OCmrw==}
     engines: {node: '>= 0.6'}
+    dev: false
+
+  /core-js@3.33.2:
+    resolution: {integrity: sha512-XeBzWI6QL3nJQiHmdzbAOiMYqjrb7hwU7A39Qhvd/POSa/t9E1AeZyEZx3fNvp/vtM8zXwhoL0FsiS0hD0pruQ==}
+    requiresBuild: true
     dev: false
 
   /cross-spawn@7.0.3:
@@ -3178,6 +3230,10 @@ packages:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
     dev: false
 
+  /lodash@4.17.21:
+    resolution: {integrity: sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==}
+    dev: false
+
   /loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
@@ -3270,6 +3326,18 @@ packages:
 
   /natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
+    dev: false
+
+  /next-cloudinary@5.6.0(next@14.0.1)(react@18.2.0):
+    resolution: {integrity: sha512-IeoA52a92PI/yzrEmapew4zegxE3QCQoMf57IBUNOX8Cb0H1igmIhpjkWlAtUAfq/Yn+h++MZTAlIMxGRg8ZUg==}
+    peerDependencies:
+      next: ^12 || ^13 || ^14
+      react: ^17 || ^18
+    dependencies:
+      '@cloudinary-util/url-loader': 3.15.0
+      '@cloudinary-util/util': 2.3.0
+      next: 14.0.1(react-dom@18.2.0)(react@18.2.0)
+      react: 18.2.0
     dev: false
 
   /next-themes@0.2.1(next@14.0.1)(react-dom@18.2.0)(react@18.2.0):
@@ -3620,6 +3688,11 @@ packages:
   /pvutils@1.1.3:
     resolution: {integrity: sha512-pMpnA0qRdFp32b1sJl1wOJNxZLQ2cbQx+k6tjNtZ8CpvVhNqEPRgivZ2WOUev2YMajecdH7ctUPDvEe87nariQ==}
     engines: {node: '>=6.0.0'}
+    dev: false
+
+  /q@1.5.1:
+    resolution: {integrity: sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==}
+    engines: {node: '>=0.6.0', teleport: '>=0.2.0'}
     dev: false
 
   /queue-microtask@1.2.3:

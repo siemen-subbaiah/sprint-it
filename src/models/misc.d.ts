@@ -27,4 +27,5 @@ interface PrismaUser {
 type Params = {
   projectId: string;
   projectName: string;
+  id?: string;
 };

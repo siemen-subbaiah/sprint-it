@@ -2,7 +2,7 @@ import TaskAddEdit from '@/components/TaskAddEdit';
 import prisma from '@/config/db';
 import React from 'react';
 
-const BacklogAddPage = async ({ params }: { params: Params }) => {
+const TaskAddFromSprintPage = async ({ params }: { params: Params }) => {
   const users = await prisma.user.findMany({
     where: {
       projects: {
@@ -23,15 +23,15 @@ const BacklogAddPage = async ({ params }: { params: Params }) => {
       },
     },
   });
-
   return (
     <TaskAddEdit
-      isBacklog={true}
+      isBacklog={false}
       users={users}
       sprints={sprints}
       params={params}
+      redirectToSprintPage={true}
     />
   );
 };
 
-export default BacklogAddPage;
+export default TaskAddFromSprintPage;

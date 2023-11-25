@@ -2,7 +2,9 @@ import TaskAddEdit from '@/components/TaskAddEdit';
 import prisma from '@/config/db';
 import React from 'react';
 
-const BacklogAddPage = async ({ params }: { params: Params }) => {
+const BacklogEditPage = async ({ params }: { params: Params }) => {
+  const taskId = Number(params.id);
+
   const users = await prisma.user.findMany({
     where: {
       projects: {
@@ -24,14 +26,24 @@ const BacklogAddPage = async ({ params }: { params: Params }) => {
     },
   });
 
+  const task = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+    },
+    include: {
+      attachments: true,
+    },
+  });
+
   return (
     <TaskAddEdit
       isBacklog={true}
       users={users}
       sprints={sprints}
       params={params}
+      task={task!}
     />
   );
 };
 
-export default BacklogAddPage;
+export default BacklogEditPage;

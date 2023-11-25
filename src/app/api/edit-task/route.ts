@@ -1,6 +1,7 @@
 import prisma from '@/config/db';
 import { currentUser } from '@clerk/nextjs';
-import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
+import { NextRequest, NextResponse } from 'next/server';
 
 interface IncomingRes {
   itemName: string;
@@ -12,6 +13,7 @@ interface IncomingRes {
   priority: string;
   estimatedPoints: string;
   projectId: string;
+  id?: number;
   resources: {
     attachmentLink: string;
     attachmentPublicId: string;
@@ -19,7 +21,7 @@ interface IncomingRes {
   }[];
 }
 
-export const POST = async (request: Request) => {
+export const POST = async (request: NextRequest) => {
   const user = await currentUser();
 
   const res: IncomingRes = await request.json();
@@ -28,7 +30,10 @@ export const POST = async (request: Request) => {
     let task;
 
     if (Number(res.sprintId) === -1) {
-      task = await prisma.task.create({
+      task = await prisma.task.update({
+        where: {
+          id: res.id,
+        },
         data: {
           createdUserId: user?.id!,
           createdUserName: user?.username ? user?.username : user?.firstName!,
@@ -49,7 +54,10 @@ export const POST = async (request: Request) => {
         },
       });
     } else {
-      task = await prisma.task.create({
+      task = await prisma.task.update({
+        where: {
+          id: res.id,
+        },
         data: {
           createdUserId: user?.id!,
           createdUserName: user?.username ? user?.username : user?.firstName!,
@@ -79,20 +87,20 @@ export const POST = async (request: Request) => {
     if (task) {
       return NextResponse.json({
         success: true,
-        message: 'Task successfully created',
+        message: 'Task successfully updated',
         task,
       });
     } else {
       return NextResponse.json({
         success: false,
-        message: 'Something went wrong in creating task',
+        message: 'Something went wrong in updating task',
       });
     }
   } catch (error) {
     console.log(error);
     return NextResponse.json({
       success: false,
-      message: 'Something went wrong in creating task',
+      message: 'Something went wrong in updating task',
       error,
     });
   }

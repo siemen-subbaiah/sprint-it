@@ -55,22 +55,47 @@ model Sprint {
 }
 
 model Task {
-  id              Int      @id @default(sequence())
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  id              Int          @id @default(sequence())
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
   createdUserId   String
   createdUserName String
   itemName        String
   itemDescription String
   assignedUserId  String
   isInBacklog     Boolean
-  sprint          Sprint?  @relation(fields: [sprintId], references: [id])
+  sprint          Sprint?      @relation(fields: [sprintId], references: [id])
   sprintId        Int?
   projectId       String
   estimatedPoints Int
   status          Int
   priority        Int
   itemType        Int
+  comments        Comment[]
+  attachments     Attachment[]
+}
+
+model Attachment {
+  id                  Int      @id @default(sequence())
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  attachmentLink      String
+  attachmentPublicId  String
+  attachmentExtension String
+  task                Task     @relation(fields: [taskId], references: [id])
+  taskId              Int
+}
+
+model Comment {
+  id              Int      @id @default(sequence())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  createdUserId   String
+  createdUserName String
+  createdUserPic  String?
+  comment         String
+  task            Task?    @relation(fields: [taskId], references: [id])
+  taskId          Int?
 }
 
 model UsersOnProjects {

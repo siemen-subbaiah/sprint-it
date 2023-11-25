@@ -1,9 +1,11 @@
-import TaskCard from '@/components/TaskCard';
+import TaskCard from '@/components/cards/TaskCard';
 import { Button } from '@/components/ui/button';
 import prisma from '@/config/db';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+
+export const revalidate = 0;
 
 const BacklogPage = async ({ params }: { params: Params }) => {
   const backlogTasks = await prisma.task.findMany({
@@ -13,6 +15,19 @@ const BacklogPage = async ({ params }: { params: Params }) => {
         projectId: params.projectId,
       },
     },
+  });
+
+  const allUsers = await prisma.user.findMany();
+
+  const finalBacklogTasks = backlogTasks.map((task) => {
+    const findUser = allUsers.find(
+      (user) => user.clerkUserId === task.assignedUserId
+    );
+    return {
+      ...task,
+      assignedUserPic: findUser?.photo!,
+      assignedUserName: findUser?.username!,
+    };
   });
 
   return (
@@ -52,7 +67,7 @@ const BacklogPage = async ({ params }: { params: Params }) => {
               </Button>
             </div>
             <section className='mt-5 grid md:grid-cols-3 grid-cols-1 gap-8'>
-              {backlogTasks.map((item) => {
+              {finalBacklogTasks.map((item) => {
                 return <TaskCard key={item.id} task={item} params={params} />;
               })}
             </section>

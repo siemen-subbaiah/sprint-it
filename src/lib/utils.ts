@@ -29,9 +29,16 @@ export const navLinks = (projectId: string, projectName: string) => {
     },
     {
       id: 5,
+      name: 'Users',
+      link: `/${projectId}/${projectName}/users`,
+    },
+    {
+      id: 6,
       name: 'Settings',
       link: `/${projectId}/${projectName}/settings`,
     },
   ];
   return navLinks;
 };
+
+export const imageFormats = ['png', 'jpg', 'jpeg', 'svg', 'webp'];

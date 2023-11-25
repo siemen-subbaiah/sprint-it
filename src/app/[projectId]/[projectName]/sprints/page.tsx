@@ -1,9 +1,11 @@
-import SprintCard from '@/components/SprintCard';
+import SprintCard from '@/components/cards/SprintCard';
 import { Button } from '@/components/ui/button';
 import prisma from '@/config/db';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+
+export const revalidate = 0;
 
 const SprintsPage = async ({ params }: { params: Params }) => {
   const sprints = await prisma.sprint.findMany({
