@@ -41,6 +41,10 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
     };
   });
 
+  const totalPoints = finalSprintTasks
+    .map((item) => item.estimatedPoints)
+    .reduce((acc, curr) => acc + curr, 0);
+
   return (
     <>
       <h1 className='text-2xl'>{sprint?.sprintName}</h1>
@@ -54,7 +58,7 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
       <Separator className='my-6' />
       <h1 className='text-2xl text-[#0072F5]'>Basic Details</h1>
       <p className='mt-6'>Project Name : {associatedProject?.name}</p>
-      <p className='mt-4'>Total Estimation Points : </p>
+      <p className='mt-4'>Total Estimation Points : {totalPoints}</p>
       <h1 className='text-2xl text-[#0072F5] mt-6'>Description</h1>
       <p className='mt-4'>{sprint?.sprintDescription}</p>
       <section className='flex gap-3 items-baseline justify-between'>

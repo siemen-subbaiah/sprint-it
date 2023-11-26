@@ -84,6 +84,7 @@ const TaskView = async ({
       <p className='mt-4'>{finalTask?.itemDescription}</p>
       <h1 className='text-2xl text-[#0072F5] my-6'>Attachments</h1>
       <div className='flex gap-5'>
+        {finalTask?.attachments?.length === 0 && <p> No attchments added </p>}
         {finalTask?.attachments?.map((attachment) => {
           return (
             <div key={attachment.id} className='my-5'>

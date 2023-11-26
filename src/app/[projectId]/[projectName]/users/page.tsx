@@ -1,6 +1,7 @@
+import InviteUserModal from '@/components/InviteUserModal';
 import UserCard from '@/components/cards/UserCard';
-import { Button } from '@/components/ui/button';
 import prisma from '@/config/db';
+import { currentUser } from '@clerk/nextjs';
 import React from 'react';
 
 const UsersPage = async ({ params }: { params: Params }) => {
@@ -16,11 +17,22 @@ const UsersPage = async ({ params }: { params: Params }) => {
     },
   });
 
+  const currentProject = await prisma.project.findMany({
+    where: {
+      uniqueId: params.projectId,
+    },
+  });
+
+  const clerkUser = await currentUser();
+
   return (
     <>
       <div className='flex justify-between items-center'>
         <h1 className='text-2xl'>Users</h1>
-        <Button>Invite User</Button>
+        <InviteUserModal
+          currentProject={currentProject[0]}
+          currentUserId={clerkUser?.id!}
+        />
       </div>
       <section className='mt-5 grid md:grid-cols-3 grid-cols-1 gap-8'>
         {users.map((item) => {

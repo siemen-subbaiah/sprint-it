@@ -20,6 +20,7 @@ export const POST = async (request: Request) => {
         isAdmin: false,
         projects,
       },
+      ignore_existing: true,
     };
 
     const res = await fetch('https://api.clerk.com/v1/invitations', {

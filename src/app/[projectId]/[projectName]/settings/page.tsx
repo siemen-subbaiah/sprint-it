@@ -7,6 +7,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import prisma from '@/config/db';
 import { currentUser } from '@clerk/nextjs';
+import { revalidatePath } from 'next/cache';
 import React from 'react';
 
 const SettingsPage = async ({ params }: { params: any }) => {
@@ -43,6 +44,24 @@ const SettingsPage = async ({ params }: { params: any }) => {
     (item) => item.email !== clerkUser?.emailAddresses[0]?.emailAddress
   );
 
+  const handleUserEdit = async (formData: FormData) => {
+    'use server';
+
+    const username = formData.get('username')?.toString()!;
+    const bio = formData.get('bio')?.toString()!;
+
+    await prisma.user.update({
+      where: {
+        id: user[0].id,
+      },
+      data: {
+        username,
+        bio,
+      },
+    });
+    revalidatePath(`/${params.projectId}/${params.projectName}/settings`);
+  };
+
   return (
     <>
       <h1 className='text-2xl mb-5'>Account Settings</h1>
@@ -53,7 +72,7 @@ const SettingsPage = async ({ params }: { params: any }) => {
             <AvatarFallback>{`${clerkUser?.firstName}${clerkUser?.lastName}`}</AvatarFallback>
           </Avatar>
         </section>
-        <section className='mt-4 md:mt-0'>
+        <form className='mt-4 md:mt-0' action={handleUserEdit}>
           <div>
             <Label htmlFor='username'>SI username</Label>
             <Input
@@ -72,38 +91,14 @@ const SettingsPage = async ({ params }: { params: any }) => {
               value={user[0]?.bio!}
             />
           </div>
-          <Button className='mt-5'>Save</Button>
-        </section>
+          <Button className='mt-5' type='submit'>
+            Save
+          </Button>
+        </form>
       </section>
 
       {isAdmin && (
         <section>
-          <div>
-            <Separator className='my-4' />
-            <h1 className='text-2xl'>Project Settings</h1>
-            <div className='w-full md:w-1/4 mt-5'>
-              <Label htmlFor='projectName'>Project name</Label>
-              <Input
-                type='text'
-                id='projectName'
-                name='projectName'
-                value={currentProject[0]?.name}
-              />
-            </div>
-            <div className='w-full md:w-1/4 my-5'>
-              <Label htmlFor='projectPrefix'>Project prefix</Label>
-              <Input
-                type='text'
-                id='projectPrefix'
-                name='projectPrefix'
-                value={currentProject[0]?.prefix}
-              />
-            </div>
-            <div className='flex gap-2 items-center'>
-              <Button>Save</Button>
-              <Button variant='destructive'>Delete Project</Button>
-            </div>
-          </div>
           <Separator className='my-4' />
           <div className='mb-5'>
             <h1 className='text-2xl'>Create new project</h1>
