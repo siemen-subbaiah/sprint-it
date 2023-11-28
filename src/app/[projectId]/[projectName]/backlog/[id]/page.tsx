@@ -1,11 +1,14 @@
 import TaskView from '@/components/TaskView';
 import prisma from '@/config/db';
+import { currentUser } from '@clerk/nextjs';
 import React from 'react';
 
 // export const dynamic = 'force-dynamic';
 export const revalidate = 0;
 
 const BacklogDetailedPage = async ({ params }: { params: Params }) => {
+  const user = await currentUser();
+
   const taskId = Number(params.id);
 
   const task = await prisma.task.findUnique({
@@ -47,7 +50,7 @@ const BacklogDetailedPage = async ({ params }: { params: Params }) => {
     sprintName: task?.sprintId ? associatedSprint?.sprintName : 'Backlog',
   };
 
-  return <TaskView finalTask={finalTask} params={params} />;
+  return <TaskView finalTask={finalTask} params={params} userId={user?.id!} />;
 };
 
 export default BacklogDetailedPage;

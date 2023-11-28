@@ -10,13 +10,29 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import { imageFormats } from '@/lib/utils';
-
+import { TrashIcon, Pencil2Icon } from '@radix-ui/react-icons';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+} from '@/components/ui/alert-dialog';
+import { redirect } from 'next/navigation';
 const TaskView = async ({
   finalTask,
   params,
+  userId,
 }: {
   finalTask: Task;
   params: Params;
+  userId: string;
 }) => {
   const user = await currentUser();
 
@@ -46,16 +62,64 @@ const TaskView = async ({
     );
   };
 
+  const handleDeleteTask = async () => {
+    'use server';
+    await prisma.task.delete({
+      where: {
+        id: finalTask.id,
+      },
+    });
+    redirect(`/${params.projectId}/${params.projectName}/backlog`);
+  };
+
   return (
     <section className='mb-10'>
       <section className='flex items-center justify-between'>
         <h1 className='text-2xl'>{finalTask?.itemName}</h1>
-        <Link
-          className='hidden md:block'
-          href={`/${params.projectId}/${params.projectName}/backlog/edit/${params.id}`}
-        >
-          <Button>Edit task</Button>
-        </Link>
+        {(userId === finalTask?.createdUserId ||
+          userId === finalTask?.assignedUserId) && (
+          <div className='flex gap-2'>
+            <Link
+              className='hidden md:block'
+              href={`/${params.projectId}/${params.projectName}/backlog/edit/${params.id}`}
+            >
+              <Button>
+                Edit task
+                <Pencil2Icon className='h-4 w-4 ml-2' />
+              </Button>
+            </Link>
+            <div>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant='destructive'>
+                    Delete Task
+                    <TrashIcon className='h-4 w-4 ml-2' />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogPortal>
+                  <AlertDialogOverlay />
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you sure you want to delete?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently the
+                        task.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <form action={handleDeleteTask}>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <Button type='submit'>Delete</Button>
+                      </AlertDialogFooter>
+                    </form>
+                  </AlertDialogContent>
+                </AlertDialogPortal>
+              </AlertDialog>
+            </div>
+          </div>
+        )}
       </section>
       <section className='flex gap-3 items-baseline'>
         <h2 className='text-xl mt-4'>

@@ -82,7 +82,7 @@ model Attachment {
   attachmentLink      String
   attachmentPublicId  String
   attachmentExtension String
-  task                Task     @relation(fields: [taskId], references: [id])
+  task                Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId              Int
 }
 
@@ -94,7 +94,7 @@ model Comment {
   createdUserName String
   createdUserPic  String?
   comment         String
-  task            Task?    @relation(fields: [taskId], references: [id])
+  task            Task?    @relation(fields: [taskId], references: [id], onDelete: Cascade)
   taskId          Int?
 }
 
