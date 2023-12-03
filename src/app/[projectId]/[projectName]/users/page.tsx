@@ -2,7 +2,13 @@ import InviteUserModal from '@/components/InviteUserModal';
 import UserCard from '@/components/cards/UserCard';
 import prisma from '@/config/db';
 import { currentUser } from '@clerk/nextjs';
+import { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Users',
+  description: 'The place where you view all the users of sprint it',
+};
 
 const UsersPage = async ({ params }: { params: Params }) => {
   const users = await prisma.user.findMany({

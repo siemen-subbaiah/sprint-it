@@ -11,11 +11,13 @@ const TaskCard = ({
   params,
   setCapturedTask,
   currentUser,
+  navigate,
 }: {
   task: Task;
   params: Params;
   setCapturedTask?: any;
   currentUser?: string;
+  navigate: string;
 }) => {
   const handleonDrag = (e: DragEvent<HTMLDivElement>, task: Task) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const TaskCard = ({
 
   return (
     <Link
-      href={`/${params.projectId}/${params.projectName}/backlog/${task.id}`}
+      href={`/${params.projectId}/${params.projectName}/${navigate}/${task.id}`}
     >
       <div
         className={`border p-5 rounded-lg ${

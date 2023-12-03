@@ -67,7 +67,7 @@ export const setupAction = async (prevState: any, formData: FormData) => {
     adminProjects = project;
   }
 
-  const adminMetaRes = await fetch('http://localhost:3000/api/save-metadata', {
+  const adminMetaRes = await fetch('/api/save-metadata', {
     method: 'POST',
     body: JSON.stringify({
       isAdmin: true,
@@ -81,9 +81,7 @@ export const setupAction = async (prevState: any, formData: FormData) => {
   console.log(adminMetaData);
 
   const inviteUserInfoRes = await fetch(
-    `http://localhost:3000/api/get-user?email=${
-      email ? email : prevState.selectedUser?.email
-    }`
+    `/api/get-user?email=${email ? email : prevState.selectedUser?.email}`
   );
 
   const inviteUserInfoData = await inviteUserInfoRes.json();
@@ -94,7 +92,7 @@ export const setupAction = async (prevState: any, formData: FormData) => {
 
   if (inviteUserInfoData?.firstTimeUser) {
     userProjects = project;
-    const inviteUserRes = await fetch('http://localhost:3000/api/invite-user', {
+    const inviteUserRes = await fetch('/api/invite-user', {
       method: 'POST',
       body: JSON.stringify({
         email,
@@ -152,7 +150,7 @@ export const setupAction = async (prevState: any, formData: FormData) => {
 
     // put the userprojects to the already present user!
 
-    const userMetaRes = await fetch('http://localhost:3000/api/save-metadata', {
+    const userMetaRes = await fetch('/api/save-metadata', {
       method: 'POST',
       body: JSON.stringify({
         isAdmin: false,

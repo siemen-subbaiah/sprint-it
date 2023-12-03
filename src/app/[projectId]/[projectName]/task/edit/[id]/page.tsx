@@ -1,14 +1,17 @@
 import TaskAddEdit from '@/components/TaskAddEdit';
 import prisma from '@/config/db';
 import { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Add Task',
-  description: 'The place where you add a task in sprint it',
+  title: 'Sprint it | Edit Task',
+  description: 'The place where you edit a task in sprint it',
 };
 
-const TaskAddFromSprintPage = async ({ params }: { params: Params }) => {
+const TaskEditPage = async ({ params }: { params: Params }) => {
+  const taskId = Number(params.id);
+
   const users = await prisma.user.findMany({
     where: {
       projects: {
@@ -29,15 +32,29 @@ const TaskAddFromSprintPage = async ({ params }: { params: Params }) => {
       },
     },
   });
+
+  const task = await prisma.task.findUnique({
+    where: {
+      id: taskId,
+    },
+    include: {
+      attachments: true,
+    },
+  });
+
+  if (!task) {
+    notFound();
+  }
+
   return (
     <TaskAddEdit
       isBacklog={false}
       users={users}
       sprints={sprints}
       params={params}
-      redirectToSprintPage={true}
+      task={task!}
     />
   );
 };
 
-export default TaskAddFromSprintPage;
+export default TaskEditPage;

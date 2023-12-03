@@ -26,24 +26,34 @@ export default authMiddleware({
       }
     }
 
-    // if (firstProject?.projects) {
-    //   const allProjects = metaData?.projects?.map(
-    //     (item: Project) => item.name
-    //   ) as Array<string>;
+    if (firstProject?.projects) {
+      const allProjectNames = metaData?.projects?.map(
+        (item: Project) => item.name
+      ) as Array<string>;
 
-    //   const urlProject = req.nextUrl.pathname.split('/')[2]?.toString();
+      const allProjectIds = metaData?.projects?.map(
+        (item: Project) => item.id
+      ) as Array<string>;
 
-    //   console.log(urlProject);
+      const urlProjectName = req.nextUrl.pathname.split('/')[2]?.toString();
+      const urlProjectId = req.nextUrl.pathname.split('/')[1]?.toString();
+      const isAPIRoute = req.nextUrl.pathname.includes('api');
 
-    //   if (auth.userId && !allProjects?.includes(urlProject)) {
-    //     return NextResponse.redirect(
-    //       new URL(
-    //         `/${firstProject.projects[0].id}/${firstProject.projects[0].name}/dashboard`,
-    //         req.url
-    //       )
-    //     );
-    //   }
-    // }
+      if (!isAPIRoute) {
+        if (
+          auth.userId &&
+          (!allProjectNames?.includes(urlProjectName) ||
+            !allProjectIds?.includes(urlProjectId))
+        ) {
+          return NextResponse.redirect(
+            new URL(
+              `/${firstProject.projects[0].id}/${firstProject.projects[0].name}/dashboard`,
+              req.url
+            )
+          );
+        }
+      }
+    }
   },
 });
 

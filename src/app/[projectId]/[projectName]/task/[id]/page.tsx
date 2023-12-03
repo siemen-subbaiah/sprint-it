@@ -1,9 +1,9 @@
 import TaskView from '@/components/TaskView';
 import prisma from '@/config/db';
 import { currentUser } from '@clerk/nextjs';
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import React from 'react';
-import { Metadata } from 'next';
 
 // export const dynamic = 'force-dynamic';
 export const revalidate = 0;
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   description: 'The place where you view a task in sprint it',
 };
 
-const BacklogDetailedPage = async ({ params }: { params: Params }) => {
+const TaskDetailedPage = async ({ params }: { params: Params }) => {
   const user = await currentUser();
 
   const taskId = Number(params.id);
@@ -52,6 +52,10 @@ const BacklogDetailedPage = async ({ params }: { params: Params }) => {
     });
   }
 
+  if (!task) {
+    notFound();
+  }
+
   const finalTask = {
     ...task!,
     assignedUserPic: assignedUser[0]?.photo!,
@@ -60,18 +64,14 @@ const BacklogDetailedPage = async ({ params }: { params: Params }) => {
     sprintName: task?.sprintId ? associatedSprint?.sprintName : 'Backlog',
   };
 
-  if (!task) {
-    notFound();
-  }
-
   return (
     <TaskView
       finalTask={finalTask}
       params={params}
       userId={user?.id!}
-      navigate='backlog'
+      navigate='task'
     />
   );
 };
 
-export default BacklogDetailedPage;
+export default TaskDetailedPage;

@@ -3,17 +3,13 @@ import { Separator } from './ui/separator';
 import { Priority, Status, Type } from '@/constants/dropdowns';
 import { Button } from './ui/button';
 import Link from 'next/link';
-import { Input } from './ui/input';
 import { currentUser } from '@clerk/nextjs';
 import prisma from '@/config/db';
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { revalidatePath } from 'next/cache';
 import Image from 'next/image';
 import { imageFormats } from '@/lib/utils';
 import { TrashIcon, Pencil2Icon } from '@radix-ui/react-icons';
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -25,42 +21,19 @@ import {
   AlertDialogPortal,
 } from '@/components/ui/alert-dialog';
 import { redirect } from 'next/navigation';
+import Comments from './Comments';
 const TaskView = async ({
   finalTask,
   params,
   userId,
+  navigate,
 }: {
   finalTask: Task;
   params: Params;
   userId: string;
+  navigate: string;
 }) => {
   const user = await currentUser();
-
-  const handleCommenting = async (formData: FormData) => {
-    'use server';
-    const comment = formData.get('comment')?.toString()!;
-    const taskId = finalTask?.id;
-    const createdUserId = user?.id!;
-    const createdUserName = user?.username ? user?.username! : user?.firstName!;
-    const createdUserPic = user?.imageUrl!;
-
-    await prisma.comment.create({
-      data: {
-        createdUserId,
-        createdUserName,
-        createdUserPic,
-        comment,
-        task: {
-          connect: {
-            id: taskId,
-          },
-        },
-      },
-    });
-    revalidatePath(
-      `/${params.projectId}/${params.projectName}/backlog/${params.id}`
-    );
-  };
 
   const handleDeleteTask = async () => {
     'use server';
@@ -81,14 +54,14 @@ const TaskView = async ({
           <div className='flex gap-2'>
             <Link
               className='hidden md:block'
-              href={`/${params.projectId}/${params.projectName}/backlog/edit/${params.id}`}
+              href={`/${params.projectId}/${params.projectName}/${navigate}/edit/${params.id}`}
             >
               <Button>
                 Edit task
                 <Pencil2Icon className='h-4 w-4 ml-2' />
               </Button>
             </Link>
-            <div>
+            <div className='hidden md:block'>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant='destructive'>
@@ -129,12 +102,44 @@ const TaskView = async ({
           {new Date(finalTask?.createdAt).toLocaleDateString()}
         </p>
       </section>
-      <Link
-        className='md:hidden block mt-2'
-        href={`/${params.projectId}/${params.projectName}/backlog/edit/${params.id}`}
-      >
-        <Button>Edit task</Button>
-      </Link>
+      <section className='flex gap-2'>
+        <Link
+          className='md:hidden block mt-2'
+          href={`/${params.projectId}/${params.projectName}/${navigate}/edit/${params.id}`}
+        >
+          <Button>Edit task</Button>
+        </Link>
+        <div className='md:hidden block mt-2'>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant='destructive'>
+                Delete Task
+                <TrashIcon className='h-4 w-4 ml-2' />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogPortal>
+              <AlertDialogOverlay />
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>
+                    Are you sure you want to delete?
+                  </AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently the
+                    task.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <form action={handleDeleteTask}>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <Button type='submit'>Delete</Button>
+                  </AlertDialogFooter>
+                </form>
+              </AlertDialogContent>
+            </AlertDialogPortal>
+          </AlertDialog>
+        </div>
+      </section>
       <Separator className='my-6' />
       <h1 className='text-2xl text-[#0072F5]'>Basic Details</h1>
       <p className='mt-4'>Project Name : {finalTask?.projectName}</p>
@@ -182,6 +187,16 @@ const TaskView = async ({
                   blurDataURL='/doc-logo.svg'
                 />
               )}
+              {attachment.attachmentExtension === 'txt' && (
+                <Image
+                  src='/txt-logo.svg'
+                  alt='landing'
+                  width='200'
+                  height='200'
+                  placeholder='blur'
+                  blurDataURL='/txt-logo.svg'
+                />
+              )}
             </div>
           );
         })}
@@ -191,42 +206,12 @@ const TaskView = async ({
 
       <h1 className='text-2xl text-[#0072F5] my-6'>Comments</h1>
 
-      <section className='mt-5'>
-        {finalTask?.comments?.map((item) => {
-          return (
-            <div key={item.id} className='mt-6'>
-              <section className='flex gap-4 items-center'>
-                <Avatar>
-                  <AvatarImage
-                    src={item?.createdUserPic!}
-                    alt={item?.createdUserName}
-                  />
-                  <AvatarFallback>
-                    {item?.createdUserName?.slice(0, 1)}
-                  </AvatarFallback>
-                </Avatar>
-                <h1 className='text-xl'>{item?.createdUserName}</h1>
-              </section>
-              <p className='mt-3'>{item?.comment}</p>
-              <p className='mt-2 text-sm text-[#4B4949]'>
-                {new Date(item?.createdAt).toLocaleDateString()}
-              </p>
-            </div>
-          );
-        })}
-      </section>
-
-      <form className='mt-5' action={handleCommenting}>
-        <Input
-          required
-          name='comment'
-          placeholder='Enter your comment here'
-          className='mt-2 w-2/6'
-        />
-        <Button type='submit' className='mt-5'>
-          Comment
-        </Button>
-      </form>
+      <Comments
+        comments={finalTask?.comments!}
+        taskId={finalTask?.id}
+        params={params}
+        userId={user?.id!}
+      />
     </section>
   );
 };

@@ -16,11 +16,8 @@ import { points, priority, status, type } from '@/constants/dropdowns';
 import { useRouter } from 'next/navigation';
 import React, { FormEvent, useEffect, useState } from 'react';
 import { useToast } from './ui/use-toast';
-import {
-  CldImage,
-  CldUploadWidget,
-  CldUploadWidgetResults,
-} from 'next-cloudinary';
+import { CldImage, CldUploadWidget } from 'next-cloudinary';
+import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { imageFormats } from '@/lib/utils';
 import Image from 'next/image';
 
@@ -88,9 +85,15 @@ const TaskAddEdit = (props: Props) => {
         const data = await res.json();
 
         if (data.success) {
-          router.push(
-            `/${props.params.projectId}/${props.params.projectName}/backlog/${props.task.id}`
-          );
+          if (props.isBacklog) {
+            router.push(
+              `/${props.params.projectId}/${props.params.projectName}/backlog`
+            );
+          } else {
+            router.push(
+              `/${props.params.projectId}/${props.params.projectName}/board`
+            );
+          }
           toast({
             variant: 'default',
             title: data.message,
@@ -145,6 +148,48 @@ const TaskAddEdit = (props: Props) => {
     }
   };
 
+  const handleDeleteAsset = async (resource: any) => {
+    const res = await fetch('/api/delete-asset', {
+      method: 'POST',
+      body: JSON.stringify({
+        public_id: resource.attachmentPublicId,
+        id: resource.id,
+      }),
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (data.success) {
+        if (data.attachments) {
+          const deletedAttachmentId = data.attachments.id;
+          const updatedResources = resourcesView?.filter(
+            (item) => item.id !== deletedAttachmentId
+          );
+          setResourcesView(updatedResources);
+        } else {
+          const deletedAttachmentId = data.attachmentPublicId;
+          const updatedResourcesView = resourcesView?.filter(
+            (item) => item.attachmentPublicId !== deletedAttachmentId
+          );
+          const updatedResources = resources?.filter(
+            (item) => item.attachmentPublicId !== deletedAttachmentId
+          );
+          setResourcesView(updatedResourcesView);
+          setResources(updatedResources);
+        }
+        toast({
+          variant: 'default',
+          title: data.message,
+        });
+      } else {
+        toast({
+          variant: 'destructive',
+          title: data.message,
+        });
+      }
+    }
+  };
+
   return (
     <section>
       <h1 className='text-2xl'>Adding new Task</h1>
@@ -183,36 +228,69 @@ const TaskAddEdit = (props: Props) => {
               <Label htmlFor='attachments'>Attachments</Label>
               <div className='mt-2 w-full border border-[#4B4949] rounded-sm p-3 grid grid-cols-1 md:grid-cols-3 gap-4'>
                 {resourcesView?.map((resource, i) => {
-                  console.log(resource);
                   return (
                     <div key={i} className='mt-2'>
                       {imageFormats.includes(resource.attachmentExtension) && (
-                        <CldImage
-                          width='200'
-                          height='200'
-                          src={resource.attachmentPublicId}
-                          alt='Uploaded image'
-                        />
+                        <div className='flex gap-2'>
+                          <CldImage
+                            width='200'
+                            height='200'
+                            src={resource.attachmentPublicId}
+                            alt='Uploaded image'
+                          />
+                          <CrossCircledIcon
+                            className='h-6 w-6 cursor-pointer'
+                            onClick={() => handleDeleteAsset(resource)}
+                          />
+                        </div>
                       )}
                       {resource.attachmentExtension === 'pdf' && (
-                        <Image
-                          src='/pdf-logo.svg'
-                          alt='landing'
-                          width='200'
-                          height='200'
-                          placeholder='blur'
-                          blurDataURL='/pdf-logo.svg'
-                        />
+                        <div className='flex gap-2'>
+                          <Image
+                            src='/pdf-logo.svg'
+                            alt='landing'
+                            width='200'
+                            height='200'
+                            placeholder='blur'
+                            blurDataURL='/pdf-logo.svg'
+                          />
+                          <CrossCircledIcon
+                            className='h-6 w-6 cursor-pointer'
+                            onClick={() => handleDeleteAsset(resource)}
+                          />
+                        </div>
                       )}
                       {resource.attachmentExtension === 'doc' && (
-                        <Image
-                          src='/doc-logo.svg'
-                          alt='landing'
-                          width='200'
-                          height='200'
-                          placeholder='blur'
-                          blurDataURL='/doc-logo.svg'
-                        />
+                        <div className='flex gap-2'>
+                          <Image
+                            src='/doc-logo.svg'
+                            alt='landing'
+                            width='200'
+                            height='200'
+                            placeholder='blur'
+                            blurDataURL='/doc-logo.svg'
+                          />
+                          <CrossCircledIcon
+                            className='h-6 w-6 cursor-pointer'
+                            onClick={() => handleDeleteAsset(resource)}
+                          />
+                        </div>
+                      )}
+                      {resource.attachmentExtension === 'txt' && (
+                        <div className='flex gap-2'>
+                          <Image
+                            src='/txt-logo.svg'
+                            alt='landing'
+                            width='200'
+                            height='200'
+                            placeholder='blur'
+                            blurDataURL='/txt-logo.svg'
+                          />
+                          <CrossCircledIcon
+                            className='h-6 w-6 cursor-pointer'
+                            onClick={() => handleDeleteAsset(resource)}
+                          />
+                        </div>
                       )}
                     </div>
                   );
@@ -224,7 +302,9 @@ const TaskAddEdit = (props: Props) => {
                   const cloudinaryResult = {
                     attachmentPublicId: result?.info.public_id,
                     attachmentLink: result?.info?.secure_url,
-                    attachmentExtension: result?.info?.format,
+                    attachmentExtension: result?.info?.format
+                      ? result?.info?.format
+                      : result?.info?.public_id.split('.')[1],
                   };
 
                   setResources([...resources!, cloudinaryResult]);
@@ -235,6 +315,7 @@ const TaskAddEdit = (props: Props) => {
                   }
 
                   console.log(result.info);
+                  console.log(resourcesView);
 
                   widget.close();
                 }}

@@ -11,6 +11,12 @@ import {
   getWidgetList,
 } from '@/lib/dashboardUtils';
 import TaskType from '@/components/dashboard/TaskType';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Dashboard',
+  description: 'The beautifully crafted dashboard for sprint it',
+};
 
 const DashboardPage = async ({ params }: { params: Params }) => {
   // checking if the user is confirmed or not!
@@ -29,8 +35,6 @@ const DashboardPage = async ({ params }: { params: Params }) => {
         },
       },
     });
-
-    console.log(user);
 
     if (user) {
       if (!user[0].isConfirmed) {

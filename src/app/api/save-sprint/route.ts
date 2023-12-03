@@ -23,7 +23,7 @@ export const POST = async (request: Request) => {
         sprintName: res?.sprintName,
         sprintDescription: res?.sprintDescription,
         startDate: res.startDate,
-        endDate: res.startDate,
+        endDate: res.endDate,
         isInProgress: true,
         project: {
           connect: {

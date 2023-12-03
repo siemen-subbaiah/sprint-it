@@ -1,6 +1,12 @@
 import TaskAddEdit from '@/components/TaskAddEdit';
 import prisma from '@/config/db';
 import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Add Task',
+  description: 'The place where you add a task in sprint it',
+};
 
 const TaskAddFromBoardPage = async ({ params }: { params: Params }) => {
   const users = await prisma.user.findMany({

@@ -59,7 +59,7 @@ const UserStatus = ({
         colors: ['#fafafa', '#fafafa', '#fafafa', '#fafafa'],
       },
     },
-    colors: ['#04A964', '#2E69BD', '#BD9E2E', '#0072F5'],
+    colors: ['#04A964', '#2E69BD', '#0072F5', '#BD9E2E'],
   };
 
   if (typeof window === 'undefined') {

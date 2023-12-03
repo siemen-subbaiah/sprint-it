@@ -8,7 +8,13 @@ import { Textarea } from '@/components/ui/textarea';
 import prisma from '@/config/db';
 import { currentUser } from '@clerk/nextjs';
 import { revalidatePath } from 'next/cache';
+import { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Settings',
+  description: 'The place where you can view the settings of sprint it',
+};
 
 const SettingsPage = async ({ params }: { params: any }) => {
   const clerkUser = await currentUser();

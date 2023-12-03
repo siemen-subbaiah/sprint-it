@@ -43,6 +43,7 @@ const Board = ({
                   params={params}
                   setCapturedTask={setCapturedTask}
                   currentUser={currentUser}
+                  navigate='task'
                 />
               );
             })}
@@ -63,6 +64,7 @@ const Board = ({
                   params={params}
                   setCapturedTask={setCapturedTask}
                   currentUser={currentUser}
+                  navigate='task'
                 />
               );
             })}
@@ -83,6 +85,7 @@ const Board = ({
                   params={params}
                   setCapturedTask={setCapturedTask}
                   currentUser={currentUser}
+                  navigate='task'
                 />
               );
             })}
@@ -103,6 +106,7 @@ const Board = ({
                   params={params}
                   setCapturedTask={setCapturedTask}
                   currentUser={currentUser}
+                  navigate='task'
                 />
               );
             })}

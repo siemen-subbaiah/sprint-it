@@ -3,9 +3,15 @@ import { Button } from '@/components/ui/button';
 import prisma from '@/config/db';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
 import React from 'react';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Sprints',
+  description: 'The place where you can view all the sprints of sprint it',
+};
 
 const SprintsPage = async ({ params }: { params: Params }) => {
   const sprints = await prisma.sprint.findMany({

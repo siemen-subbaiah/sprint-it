@@ -1,11 +1,31 @@
 import TaskCard from '@/components/cards/TaskCard';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+  AlertDialogPortal,
+} from '@/components/ui/alert-dialog';
 import prisma from '@/config/db';
 import Link from 'next/link';
 import React from 'react';
+import { notFound, redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
+import { Metadata } from 'next';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Sprint Details',
+  description: 'The place where you view the sprint details in sprint it',
+};
 
 const SprintDetailPage = async ({ params }: { params: Params }) => {
   const sprintId = Number(params.id);
@@ -45,6 +65,25 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
     .map((item) => item.estimatedPoints)
     .reduce((acc, curr) => acc + curr, 0);
 
+  const handleEndSprint = async () => {
+    'use server';
+    await prisma.sprint.update({
+      where: {
+        id: sprint?.id,
+      },
+      data: {
+        isEnded: true,
+        isInProgress: false,
+      },
+    });
+    revalidatePath(`/${params.projectId}/${params.projectName}/sprints`);
+    redirect(`/${params.projectId}/${params.projectName}/sprints`);
+  };
+
+  if (!sprint) {
+    notFound();
+  }
+
   return (
     <>
       <h1 className='text-2xl'>{sprint?.sprintName}</h1>
@@ -57,6 +96,13 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
 
       <Separator className='my-6' />
       <h1 className='text-2xl text-[#0072F5]'>Basic Details</h1>
+      <p className='mt-6'>Project Name : {associatedProject?.name}</p>
+      <p className='mt-6'>
+        Start Date : {new Date(sprint?.startDate!).toLocaleDateString()}
+      </p>
+      <p className='mt-6'>
+        End Date : {new Date(sprint?.endDate!).toLocaleDateString()}
+      </p>
       <p className='mt-6'>Project Name : {associatedProject?.name}</p>
       <p className='mt-4'>Total Estimation Points : {totalPoints}</p>
       <h1 className='text-2xl text-[#0072F5] mt-6'>Description</h1>
@@ -71,11 +117,42 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
           </Link>
         </Button>
       </section>
-      <section className='mt-5 grid md:grid-cols-3 grid-cols-1 gap-8'>
+      <section className='my-5 grid md:grid-cols-3 grid-cols-1 gap-8'>
         {finalSprintTasks.map((item) => {
-          return <TaskCard key={item.id} task={item} params={params} />;
+          return (
+            <TaskCard
+              key={item.id}
+              task={item}
+              params={params}
+              navigate='task'
+            />
+          );
         })}
       </section>
+      <AlertDialog>
+        <AlertDialogTrigger asChild>
+          <Button className='mb-5'>End Sprint</Button>
+        </AlertDialogTrigger>
+        <AlertDialogPortal>
+          <AlertDialogOverlay />
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Are you sure you want to end sprint?
+              </AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently the task.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <form action={handleEndSprint}>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <Button type='submit'>End</Button>
+              </AlertDialogFooter>
+            </form>
+          </AlertDialogContent>
+        </AlertDialogPortal>
+      </AlertDialog>
     </>
   );
 };

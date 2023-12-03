@@ -1,4 +1,5 @@
 import Board from '@/components/Board';
+import SprintSelection from '@/components/SprintSelection';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -6,11 +7,26 @@ import prisma from '@/config/db';
 import { currentUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import React from 'react';
+import { Metadata } from 'next';
 
 export const revalidate = 0;
 
-const BoardPage = async ({ params }: { params: Params }) => {
+export const metadata: Metadata = {
+  title: 'Sprint it | Board',
+  description: 'The place where you view the board of sprint it',
+};
+
+const BoardPage = async ({
+  params,
+  searchParams,
+}: {
+  params: Params;
+  searchParams: { [key: string]: string | string[] | undefined };
+}) => {
   const clerkUser = await currentUser();
+
+  const sprintId = Number(searchParams?.sprintId);
+  const sprintName = searchParams?.sprintName;
 
   const sprints = await prisma.sprint.findMany({
     where: {
@@ -28,7 +44,7 @@ const BoardPage = async ({ params }: { params: Params }) => {
       isInBacklog: false,
       AND: {
         // assignedUserId: clerkUser?.id,
-        sprintId: sprints[0]?.id,
+        sprintId: sprintId ? sprintId : sprints[0]?.id,
       },
     },
   });
@@ -83,8 +99,21 @@ const BoardPage = async ({ params }: { params: Params }) => {
 
   return (
     <>
-      <div className='flex justify-between items-center'>
-        <h1 className='text-2xl'>My Board</h1>
+      <div className='flex justify-between items-start'>
+        <div>
+          <h1 className='text-2xl'>My Board</h1>
+          <section className='my-5'>
+            <SprintSelection
+              params={params}
+              sprints={sprints}
+              currentSprintName={
+                sprintName?.toString()
+                  ? sprintName.toString()
+                  : sprints[0].sprintName
+              }
+            />
+          </section>
+        </div>
         <Button>
           <Link
             href={`/${params.projectId}/${params.projectName}/board/add-task`}

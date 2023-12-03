@@ -37,7 +37,7 @@ const ProjectSelection = (props: Props) => {
         <Image src='/logo.svg' alt='logo' width='150' height='150' />
       </Link>
 
-      {props.userId && (
+      {props.userId && props.projects.length >= 1 && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline' className='flex items-center gap-1'>

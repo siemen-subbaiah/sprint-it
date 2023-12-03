@@ -1,11 +1,17 @@
 import TaskCard from '@/components/cards/TaskCard';
 import { Button } from '@/components/ui/button';
 import prisma from '@/config/db';
+import { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 
 export const revalidate = 0;
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Backlog',
+  description: 'The backlog page of sprint it',
+};
 
 const BacklogPage = async ({ params }: { params: Params }) => {
   const backlogTasks = await prisma.task.findMany({
@@ -68,7 +74,14 @@ const BacklogPage = async ({ params }: { params: Params }) => {
             </div>
             <section className='mt-5 grid md:grid-cols-3 grid-cols-1 gap-8'>
               {finalBacklogTasks.map((item) => {
-                return <TaskCard key={item.id} task={item} params={params} />;
+                return (
+                  <TaskCard
+                    key={item.id}
+                    task={item}
+                    params={params}
+                    navigate='backlog'
+                  />
+                );
               })}
             </section>
           </section>

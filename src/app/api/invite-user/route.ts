@@ -15,7 +15,7 @@ export const POST = async (request: Request) => {
 
     const body = {
       email_address: email,
-      redirect_url: 'http://localhost:3000/sign-up',
+      redirect_url: process.env.NEXT_PUBLIC_SIGN_UP_URL,
       public_metadata: {
         isAdmin: false,
         projects,

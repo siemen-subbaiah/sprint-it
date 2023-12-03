@@ -19,7 +19,7 @@ const TaskStatus = ({
     stroke: {
       colors: ['#0A0A0A'],
     },
-    colors: ['#04A964', '#2E69BD', '#BD9E2E', '#0072F5'],
+    colors: ['#04A964', '#2E69BD', '#0072F5', '#BD9E2E'],
     legend: {
       labels: {
         colors: ['#fafafa', '#fafafa', '#fafafa', '#fafafa'],

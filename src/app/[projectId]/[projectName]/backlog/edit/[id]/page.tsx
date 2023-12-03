@@ -1,6 +1,13 @@
 import TaskAddEdit from '@/components/TaskAddEdit';
 import prisma from '@/config/db';
+import { notFound } from 'next/navigation';
 import React from 'react';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Sprint it | Edit Task',
+  description: 'The place where you edit a task in sprint it',
+};
 
 const BacklogEditPage = async ({ params }: { params: Params }) => {
   const taskId = Number(params.id);
@@ -34,6 +41,10 @@ const BacklogEditPage = async ({ params }: { params: Params }) => {
       attachments: true,
     },
   });
+
+  if (!task) {
+    notFound();
+  }
 
   return (
     <TaskAddEdit
