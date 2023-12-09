@@ -33,8 +33,14 @@ const NavLinks = ({ userId }: { userId: string | null }) => {
             <ul className='md:hidden'>
               {navLinks(currentProjectId, currentProjectName).map((item) => {
                 return (
-                  <li key={item.id} className='my-3'>
-                    <Link href={item.link}>{item.name}</Link>
+                  <li
+                    key={item.id}
+                    className='my-3'
+                    // onClick={() => setToggle(!toggle)}
+                  >
+                    <Link href={item.link} onClick={() => setToggle(!toggle)}>
+                      {item.name}
+                    </Link>
                   </li>
                 );
               })}

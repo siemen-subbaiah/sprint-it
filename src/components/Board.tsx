@@ -27,7 +27,7 @@ const Board = ({
   };
 
   return (
-    <section className='mt-4 grid grid-cols-4 gap-5'>
+    <section className='mt-4 grid grid-cols-4 gap-4'>
       <div
         onDrop={() => handleonDrop(1)}
         onDragOver={(event) => handleonDragOver(event)}

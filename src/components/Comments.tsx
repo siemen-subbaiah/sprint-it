@@ -120,7 +120,7 @@ const Comments = ({
           required
           name='comment'
           placeholder='Enter your comment here'
-          className='mt-2 w-2/6'
+          className='mt-2 md:w-2/6'
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />

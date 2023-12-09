@@ -107,7 +107,7 @@ const DashboardPage = async ({ params }: { params: Params }) => {
     <div>
       <section className='mb-6'>
         <h1 className='text-3xl'>{currentProject?.name}</h1>
-        <div className='flex gap-4'>
+        <div className='flex gap-4 mt-1'>
           <p>Owner : {currentProject?.createdUserName}</p>
           <p>
             Created on :{' '}

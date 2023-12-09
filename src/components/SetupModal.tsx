@@ -19,21 +19,14 @@ import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-
-import { CaretSortIcon } from '@radix-ui/react-icons';
-import { CheckIcon } from 'lucide-react';
-import { cn } from '@/lib/utils';
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 
 const initialState: {
   success?: boolean | null;
@@ -131,62 +124,43 @@ const SetupModal = ({
                 placeholder='Email ID of your first team member'
                 className='col-span-3'
               />
-              {showOtherUsers && allUsers.length >= 1 && (
-                <section>
-                  <Separator className='my-4' />
-                  <p>or</p>
-                  <Popover open={open} onOpenChange={setOpen} modal>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant='outline'
-                        role='combobox'
-                        aria-expanded={open}
-                        className='w-[200px] justify-between'
-                      >
-                        {value
-                          ? allUsers.find((user) => user.username === value)
-                              ?.username
-                          : 'Select user'}
-                        <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className='w-[200px] p-0'>
-                      <Command>
-                        <CommandInput
-                          placeholder='Search user'
-                          className='h-9'
-                        />
-                        <CommandEmpty>No user found.</CommandEmpty>
-                        <CommandGroup>
-                          {allUsers.map((user) => (
-                            <CommandItem
-                              key={user.username}
-                              onSelect={(currentValue: any) => {
-                                setValue(
-                                  currentValue === value ? '' : currentValue
-                                );
-                                setOpen(false);
-                                initialState.selectedUser = user;
+            </div>
+            {showOtherUsers && allUsers.length >= 1 && (
+              <>
+                <Separator className='mt-4' />
+                <p className='text-center'>
+                  or select existing user instead of email invite
+                </p>
+                <section className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='username' className='text-right'>
+                    User
+                  </Label>
+                  <Select>
+                    <SelectTrigger className='col-span-3'>
+                      <SelectValue placeholder='Existing user' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Users</SelectLabel>
+                        {allUsers.map((item) => {
+                          return (
+                            <SelectItem
+                              value={item.username!}
+                              key={item.id}
+                              onSelect={() => {
+                                initialState.selectedUser = item;
                               }}
                             >
-                              {user.username}
-                              <CheckIcon
-                                className={cn(
-                                  'ml-auto h-4 w-4',
-                                  value === user.username
-                                    ? 'opacity-100'
-                                    : 'opacity-0'
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
+                              {item.username}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </section>
-              )}
-            </div>
+              </>
+            )}
             <DialogFooter>
               <Button type='submit' aria-disabled={pending}>
                 {pending ? 'Loading...' : 'Create and Invite'}

@@ -150,7 +150,10 @@ const TaskView = async ({
       <p className='mt-4'>Item Type : {Type[finalTask?.itemType]}</p>
       <p className='mt-4'>Estimation Points : {finalTask?.estimatedPoints}</p>
       <h1 className='text-2xl text-[#0072F5] my-6'>Description</h1>
-      <p className='mt-4'>{finalTask?.itemDescription}</p>
+      <div
+        className='mt-4'
+        dangerouslySetInnerHTML={{ __html: finalTask?.itemDescription }}
+      ></div>
       <h1 className='text-2xl text-[#0072F5] my-6'>Attachments</h1>
       <div className='flex gap-5'>
         {finalTask?.attachments?.length === 0 && <p> No attchments added </p>}

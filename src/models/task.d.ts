@@ -18,17 +18,8 @@ interface Task {
   itemType: number;
   assignedUserName?: string;
   assignedUserPic?: string;
+  comments?: Comment[] | any[];
   attachments?: Attachment[];
-  comments?: Comment[];
-}
-interface Attachment {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-  attachmentLink: string;
-  attachmentPublicId: string;
-  attachmentExtension: string;
-  taskId: number;
 }
 interface Comment {
   id: number;
@@ -38,5 +29,14 @@ interface Comment {
   createdUserName: string;
   createdUserPic: string;
   comment: string;
+  taskId: number;
+}
+interface Attachment {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+  attachmentLink: string;
+  attachmentPublicId: string;
+  attachmentExtension: string;
   taskId: number;
 }

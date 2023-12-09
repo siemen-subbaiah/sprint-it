@@ -20,6 +20,9 @@ import { CldImage, CldUploadWidget } from 'next-cloudinary';
 import { CrossCircledIcon } from '@radix-ui/react-icons';
 import { imageFormats } from '@/lib/utils';
 import Image from 'next/image';
+import { useEditor, EditorContent } from '@tiptap/react';
+import StarterKit from '@tiptap/starter-kit';
+import Toolbar from './Toolbar';
 
 type Props = {
   isBacklog: boolean;
@@ -41,28 +44,51 @@ const TaskAddEdit = (props: Props) => {
 
   const [formValues, setFormValues] = useState({
     itemName: '',
-    itemDescription: '',
+    itemDescription: props?.task?.itemDescription
+      ? props?.task?.itemDescription
+      : '',
     assignedUserId: '',
-    sprintId: '',
+    sprintId: props?.isBacklog ? '-1' : '',
     status: '',
     itemType: '',
     priority: '',
     estimatedPoints: '',
   });
 
+  const editor = useEditor({
+    extensions: [StarterKit.configure({})],
+    content: formValues.itemDescription,
+    editorProps: {
+      attributes: {
+        class: 'rounded-md border min-h-[150px]',
+      },
+    },
+    onUpdate({ editor }) {
+      setFormValues({
+        ...formValues,
+        itemDescription: editor.getHTML(),
+      });
+      console.log(editor.getHTML());
+    },
+  });
+
   useEffect(() => {
-    setFormValues({
-      itemName: props.task?.itemName!,
-      itemDescription: props.task?.itemDescription!,
-      assignedUserId: props.task?.assignedUserId!,
-      sprintId: props.task?.sprintId ? props.task?.sprintId?.toString()! : '-1',
-      status: props.task?.status?.toString()!,
-      itemType: props.task?.itemType?.toString()!,
-      priority: props.task?.priority?.toString()!,
-      estimatedPoints: props.task?.estimatedPoints?.toString()!,
-    });
-    setResourcesView(props?.task?.attachments!);
-    console.log(props?.task);
+    if (props?.task) {
+      setFormValues({
+        itemName: props.task?.itemName!,
+        itemDescription: props.task?.itemDescription!,
+        assignedUserId: props.task?.assignedUserId!,
+        sprintId: props.task?.sprintId
+          ? props.task?.sprintId?.toString()!
+          : '-1',
+        status: props.task?.status?.toString()!,
+        itemType: props.task?.itemType?.toString()!,
+        priority: props.task?.priority?.toString()!,
+        estimatedPoints: props.task?.estimatedPoints?.toString()!,
+      });
+      setResourcesView(props?.task?.attachments!);
+      console.log(props?.task);
+    }
   }, [props?.task]);
 
   const handleTaskCreateEdit = async (e: FormEvent<HTMLFormElement>) => {
@@ -212,7 +238,7 @@ const TaskAddEdit = (props: Props) => {
             </div>
             <div className='mt-10'>
               <Label htmlFor='taskDescription'>Task Description</Label>
-              <Textarea
+              {/* <Textarea
                 className='h-32 mt-2'
                 name='taskDescription'
                 value={formValues.itemDescription}
@@ -222,7 +248,13 @@ const TaskAddEdit = (props: Props) => {
                     itemDescription: e.target.value,
                   })
                 }
-              />
+              /> */}
+              <div className='mt-2'>
+                <Toolbar editor={editor} />
+              </div>
+              <div className='mt-2'>
+                <EditorContent editor={editor} />
+              </div>
             </div>
             <div className='mt-10'>
               <Label htmlFor='attachments'>Attachments</Label>
@@ -347,6 +379,7 @@ const TaskAddEdit = (props: Props) => {
             <div>
               <Label htmlFor='assignUser'>Assign users</Label>
               <Select
+                required
                 defaultValue={props?.task?.assignedUserId}
                 onValueChange={(value) =>
                   setFormValues({ ...formValues, assignedUserId: value })
@@ -372,8 +405,11 @@ const TaskAddEdit = (props: Props) => {
             <div className='mt-10'>
               <Label htmlFor='addTo'>Add to</Label>
               <Select
+                required={props?.isBacklog ? false : true}
                 defaultValue={
-                  props?.task?.sprintId ? props?.task?.sprintId : '-1'
+                  props?.task?.sprintId
+                    ? props?.task?.sprintId.toString()
+                    : '-1'
                 }
                 onValueChange={(value) =>
                   setFormValues({ ...formValues, sprintId: value })
@@ -402,6 +438,7 @@ const TaskAddEdit = (props: Props) => {
             <div className='mt-10'>
               <Label htmlFor='status'>Status</Label>
               <Select
+                required
                 defaultValue={props?.task?.status.toString()}
                 onValueChange={(value) =>
                   setFormValues({ ...formValues, status: value })
@@ -427,6 +464,7 @@ const TaskAddEdit = (props: Props) => {
             <div className='mt-10'>
               <Label htmlFor='itemType'>Item type</Label>
               <Select
+                required
                 defaultValue={props?.task?.itemType.toString()}
                 onValueChange={(value) =>
                   setFormValues({ ...formValues, itemType: value })
@@ -451,6 +489,7 @@ const TaskAddEdit = (props: Props) => {
             <div className='mt-10'>
               <Label htmlFor='priority'>Priority</Label>
               <Select
+                required
                 defaultValue={props?.task?.priority.toString()}
                 onValueChange={(value) =>
                   setFormValues({ ...formValues, priority: value })
@@ -475,6 +514,7 @@ const TaskAddEdit = (props: Props) => {
             <div className='mt-10'>
               <Label htmlFor='points'>Estimation Points</Label>
               <Select
+                required
                 defaultValue={props?.task?.estimatedPoints.toString()}
                 onValueChange={(value) =>
                   setFormValues({ ...formValues, estimatedPoints: value })

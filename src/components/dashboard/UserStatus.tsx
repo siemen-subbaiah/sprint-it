@@ -60,6 +60,16 @@ const UserStatus = ({
       },
     },
     colors: ['#04A964', '#2E69BD', '#0072F5', '#BD9E2E'],
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          legend: {
+            horizontalAlign: 'left',
+          },
+        },
+      },
+    ],
   };
 
   if (typeof window === 'undefined') {

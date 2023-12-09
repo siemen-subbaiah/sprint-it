@@ -34,7 +34,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Header />
-            <main className='px-4 md:px-20 mt-5'>{children}</main>
+            <main className='px-4 md:px-20 my-5'>{children}</main>
             <Toaster />
           </ThemeProvider>
         </body>

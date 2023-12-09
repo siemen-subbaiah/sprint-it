@@ -13,8 +13,10 @@ const TaskStatus = ({
 }) => {
   const options: ApexOptions = {
     chart: {
-      width: 500,
       type: 'pie',
+    },
+    dataLabels: {
+      enabled: false,
     },
     stroke: {
       colors: ['#0A0A0A'],
@@ -26,25 +28,12 @@ const TaskStatus = ({
       },
     },
     labels: label,
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            width: 10,
-          },
-          legend: {
-            position: 'bottom',
-          },
-        },
-      },
-    ],
   };
 
   return (
     <div id='chart' className='border p-3 rounded-lg'>
       <h1 className='text-xl mb-2'>Tasks Completion</h1>
-      <Chart options={options} series={series} type='pie' width={500} />
+      <Chart options={options} series={series} type='pie' />
     </div>
   );
 };
