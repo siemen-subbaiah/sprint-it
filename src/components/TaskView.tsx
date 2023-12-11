@@ -22,6 +22,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { redirect } from 'next/navigation';
 import Comments from './Comments';
+import Attachments from './Attachments';
 const TaskView = async ({
   finalTask,
   params,
@@ -149,63 +150,18 @@ const TaskView = async ({
       <p className='mt-4'>Priority : {Priority[finalTask?.priority]}</p>
       <p className='mt-4'>Item Type : {Type[finalTask?.itemType]}</p>
       <p className='mt-4'>Estimation Points : {finalTask?.estimatedPoints}</p>
+      <Separator className='my-4' />
       <h1 className='text-2xl text-[#0072F5] my-6'>Description</h1>
       <div
         className='mt-4'
         dangerouslySetInnerHTML={{ __html: finalTask?.itemDescription }}
       ></div>
+      <Separator className='my-4' />
       <h1 className='text-2xl text-[#0072F5] my-6'>Attachments</h1>
-      <div className='flex gap-5'>
-        {finalTask?.attachments?.length === 0 && <p> No attchments added </p>}
-        {finalTask?.attachments?.map((attachment) => {
-          return (
-            <div key={attachment.id} className='my-5'>
-              {imageFormats.includes(attachment.attachmentExtension) && (
-                <Image
-                  src={attachment.attachmentLink}
-                  blurDataURL={attachment.attachmentLink}
-                  placeholder='blur'
-                  alt='task_image'
-                  height={250}
-                  width={250}
-                />
-              )}
-              {attachment.attachmentExtension === 'pdf' && (
-                <Image
-                  src='/pdf-logo.svg'
-                  alt='landing'
-                  width='200'
-                  height='200'
-                  placeholder='blur'
-                  blurDataURL='/pdf-logo.svg'
-                />
-              )}
-              {attachment.attachmentExtension === 'doc' && (
-                <Image
-                  src='/doc-logo.svg'
-                  alt='landing'
-                  width='200'
-                  height='200'
-                  placeholder='blur'
-                  blurDataURL='/doc-logo.svg'
-                />
-              )}
-              {attachment.attachmentExtension === 'txt' && (
-                <Image
-                  src='/txt-logo.svg'
-                  alt='landing'
-                  width='200'
-                  height='200'
-                  placeholder='blur'
-                  blurDataURL='/txt-logo.svg'
-                />
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <Attachments attachments={finalTask?.attachments!} />
 
       {/* comments */}
+      <Separator className='my-4' />
 
       <h1 className='text-2xl text-[#0072F5] my-6'>Comments</h1>
 

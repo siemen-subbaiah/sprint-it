@@ -347,8 +347,6 @@ const TaskAddEdit = (props: Props) => {
                   }
 
                   console.log(result.info);
-                  console.log(resourcesView);
-
                   widget.close();
                 }}
               >
