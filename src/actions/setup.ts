@@ -67,21 +67,26 @@ export const setupAction = async (prevState: any, formData: FormData) => {
     adminProjects = project;
   }
 
-  const adminMetaRes = await fetch('/api/save-metadata', {
-    method: 'POST',
-    body: JSON.stringify({
-      isAdmin: true,
-      userId: clerkUser?.id,
-      projects: adminProjects,
-    }),
-  });
+  const adminMetaRes = await fetch(
+    `${process.env.HOSTED_URL}/api/save-metadata`,
+    {
+      method: 'POST',
+      body: JSON.stringify({
+        isAdmin: true,
+        userId: clerkUser?.id,
+        projects: adminProjects,
+      }),
+    }
+  );
 
   const adminMetaData = await adminMetaRes.json();
 
   console.log(adminMetaData);
 
   const inviteUserInfoRes = await fetch(
-    `/api/get-user?email=${email ? email : prevState.selectedUser?.email}`
+    `${process.env.HOSTED_URL}/api/get-user?email=${
+      email ? email : prevState.selectedUser?.email
+    }`
   );
 
   const inviteUserInfoData = await inviteUserInfoRes.json();
@@ -92,13 +97,16 @@ export const setupAction = async (prevState: any, formData: FormData) => {
 
   if (inviteUserInfoData?.firstTimeUser) {
     userProjects = project;
-    const inviteUserRes = await fetch('/api/invite-user', {
-      method: 'POST',
-      body: JSON.stringify({
-        email,
-        projects: userProjects,
-      }),
-    });
+    const inviteUserRes = await fetch(
+      `${process.env.HOSTED_URL}/api/invite-user`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          email,
+          projects: userProjects,
+        }),
+      }
+    );
 
     const inviteUserData = await inviteUserRes.json();
 
@@ -150,14 +158,17 @@ export const setupAction = async (prevState: any, formData: FormData) => {
 
     // put the userprojects to the already present user!
 
-    const userMetaRes = await fetch('/api/save-metadata', {
-      method: 'POST',
-      body: JSON.stringify({
-        isAdmin: false,
-        userId: prevState.selectedUser?.clerkUserId,
-        projects: userProjects,
-      }),
-    });
+    const userMetaRes = await fetch(
+      `${process.env.HOSTED_URL}/api/save-metadata`,
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          isAdmin: false,
+          userId: prevState.selectedUser?.clerkUserId,
+          projects: userProjects,
+        }),
+      }
+    );
 
     const userMetaData = await userMetaRes.json();
 

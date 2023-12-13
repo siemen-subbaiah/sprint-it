@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import SetupButton from './submit/SetupButton';
 
 const initialState: {
   success?: boolean | null;
@@ -53,9 +54,6 @@ const SetupModal = ({
   const [state, formAction] = useFormState(setupAction, initialState);
 
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
 
   useEffect(() => {
     console.log(state);
@@ -162,9 +160,10 @@ const SetupModal = ({
               </>
             )}
             <DialogFooter>
-              <Button type='submit' aria-disabled={pending}>
+              {/* <Button type='submit' aria-disabled={pending}>
                 {pending ? 'Loading...' : 'Create and Invite'}
-              </Button>
+              </Button> */}
+              <SetupButton />
             </DialogFooter>
           </form>
         </DialogContent>
