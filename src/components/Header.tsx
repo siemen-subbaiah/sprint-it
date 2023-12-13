@@ -6,6 +6,7 @@ import NavLinks from './NavLinks';
 const Header = async () => {
   const user = await currentUser();
   const projects = user?.publicMetadata?.projects as Project[];
+  const isAdmin = user?.publicMetadata?.isAdmin as boolean;
 
   return (
     <nav
@@ -14,7 +15,7 @@ const Header = async () => {
       } items-center px-4 md:px-20 pb-3 pt-5 border-b justify-between sticky top-0 bg-[#0A0A0A]`}
     >
       <ProjectSelection projects={projects} userId={user?.id!} />
-      <NavLinks userId={user?.id!} />
+      <NavLinks userId={user?.id!} isAdmin={isAdmin} />
     </nav>
   );
 };

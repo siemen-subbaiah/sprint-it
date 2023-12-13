@@ -27,7 +27,11 @@ const TaskType = ({ series, label }: { series: number[]; label: string[] }) => {
   return (
     <div id='chart' className='border p-3 rounded-lg'>
       <h1 className='text-xl mb-2'>Tasks Item Type</h1>
-      <Chart options={options} series={series} type='donut' />
+      {series.length >= 0 ? (
+        <Chart options={options} series={series} type='donut' />
+      ) : (
+        <p>Not enough data to display</p>
+      )}
     </div>
   );
 };

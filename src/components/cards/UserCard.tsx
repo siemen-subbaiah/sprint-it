@@ -15,6 +15,9 @@ const UserCard = ({ user }: { user: PrismaUser }) => {
         </Avatar>
       </div>
       <p className='mt-2'>{user?.role}</p>
+      <p className='mt-2'>
+        Status : {user?.isConfirmed ? 'Confirmed' : 'Pending'}
+      </p>
     </section>
   );
 };

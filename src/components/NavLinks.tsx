@@ -7,7 +7,13 @@ import { useParams } from 'next/navigation';
 import { navLinks } from '@/lib/utils';
 import { Menu } from 'lucide-react';
 
-const NavLinks = ({ userId }: { userId: string | null }) => {
+const NavLinks = ({
+  userId,
+  isAdmin,
+}: {
+  userId: string | null;
+  isAdmin: boolean;
+}) => {
   const [toggle, setToggle] = useState(false);
 
   const params = useParams();
@@ -31,19 +37,21 @@ const NavLinks = ({ userId }: { userId: string | null }) => {
         <>
           {toggle && (
             <ul className='md:hidden'>
-              {navLinks(currentProjectId, currentProjectName).map((item) => {
-                return (
-                  <li
-                    key={item.id}
-                    className='my-3'
-                    // onClick={() => setToggle(!toggle)}
-                  >
-                    <Link href={item.link} onClick={() => setToggle(!toggle)}>
-                      {item.name}
-                    </Link>
-                  </li>
-                );
-              })}
+              {navLinks(currentProjectId, currentProjectName, isAdmin).map(
+                (item) => {
+                  return (
+                    <li
+                      key={item.id}
+                      className='my-3'
+                      // onClick={() => setToggle(!toggle)}
+                    >
+                      <Link href={item.link} onClick={() => setToggle(!toggle)}>
+                        {item.name}
+                      </Link>
+                    </li>
+                  );
+                }
+              )}
               <li>
                 <UserButton afterSignOutUrl='/' />
               </li>
@@ -54,13 +62,15 @@ const NavLinks = ({ userId }: { userId: string | null }) => {
             onClick={() => setToggle(!toggle)}
           />
           <ul className='items-center gap-6 md:flex hidden'>
-            {navLinks(currentProjectId, currentProjectName).map((item) => {
-              return (
-                <li key={item.id}>
-                  <Link href={item.link}>{item.name}</Link>
-                </li>
-              );
-            })}
+            {navLinks(currentProjectId, currentProjectName, isAdmin).map(
+              (item) => {
+                return (
+                  <li key={item.id}>
+                    <Link href={item.link}>{item.name}</Link>
+                  </li>
+                );
+              }
+            )}
             <li>
               <UserButton afterSignOutUrl='/' />
             </li>

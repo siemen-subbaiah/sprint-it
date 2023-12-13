@@ -79,7 +79,11 @@ const UserStatus = ({
   return (
     <div id='chart' className='border p-3 rounded-lg my-10'>
       <h1 className='text-xl mb-2'>Users Completion</h1>
-      <Chart options={options} series={series} type='bar' height={350} />
+      {series.length >= 0 ? (
+        <Chart options={options} series={series} type='bar' height={350} />
+      ) : (
+        <p>Not enough data to display</p>
+      )}
     </div>
   );
 };

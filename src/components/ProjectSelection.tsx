@@ -37,7 +37,7 @@ const ProjectSelection = (props: Props) => {
         <Image src='/logo.svg' alt='logo' width='150' height='150' />
       </Link>
 
-      {props.userId && props.projects.length >= 1 && (
+      {props?.userId && props?.projects?.length >= 1 && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='outline' className='flex items-center gap-1'>
@@ -49,7 +49,7 @@ const ProjectSelection = (props: Props) => {
           <DropdownMenuContent className='w-56' align='start'>
             <DropdownMenuLabel>Select Project</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            {props.projects?.map((project, i) => {
+            {props?.projects?.map((project, i) => {
               return (
                 <DropdownMenuCheckboxItem
                   checked={project.name === currentProjectName}

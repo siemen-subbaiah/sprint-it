@@ -21,7 +21,7 @@ const SettingsPage = async ({ params }: { params: any }) => {
 
   const allProjects = clerkUser?.publicMetadata?.projects as Project[];
 
-  const currentProject = allProjects.filter(
+  const currentProject = allProjects?.filter(
     (item) => item.id === params.projectId
   );
 

@@ -33,7 +33,11 @@ const TaskStatus = ({
   return (
     <div id='chart' className='border p-3 rounded-lg'>
       <h1 className='text-xl mb-2'>Tasks Completion</h1>
-      <Chart options={options} series={series} type='pie' />
+      {series.length >= 0 ? (
+        <Chart options={options} series={series} type='pie' />
+      ) : (
+        <p>Not enough data to display</p>
+      )}
     </div>
   );
 };
