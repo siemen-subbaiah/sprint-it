@@ -40,16 +40,6 @@ const SettingsPage = async ({ params }: { params: any }) => {
     },
   });
 
-  const users = await prisma.user.findMany({
-    where: {
-      isConfirmed: true,
-    },
-  });
-
-  const allUsers = users.filter(
-    (item) => item.email !== clerkUser?.emailAddresses[0]?.emailAddress
-  );
-
   const handleUserEdit = async (formData: FormData) => {
     'use server';
 
@@ -108,7 +98,7 @@ const SettingsPage = async ({ params }: { params: any }) => {
           <Separator className='my-4' />
           <div className='mb-5'>
             <h1 className='text-2xl'>Create new project</h1>
-            <SetupModal showOtherUsers={true} allUsers={allUsers} />
+            <SetupModal />
           </div>
         </section>
       )}

@@ -11,9 +11,15 @@ export const POST = async (request: Request) => {
         projects,
       },
     });
-    return NextResponse.json({ success: true });
+    return NextResponse.json({
+      success: true,
+      message: 'Meta Data saved successfully',
+    });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ success: false });
+    return NextResponse.json({
+      success: false,
+      message: 'Something went wront when saving Meta Data',
+    });
   }
 };

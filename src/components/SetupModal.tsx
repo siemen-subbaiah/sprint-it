@@ -1,9 +1,7 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useFormStatus, useFormState } from 'react-dom';
-import { setupAction } from '@/actions/setup';
-import { redirect } from 'next/navigation';
+import React, { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useToast } from './ui/use-toast';
 
 import { Button } from '@/components/ui/button';
@@ -15,70 +13,143 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import SetupButton from './submit/SetupButton';
 
-const initialState: {
-  success?: boolean | null;
-  message?: string | null;
-  createdProjectId?: string | null;
-  createdProjectName?: string | null;
-  selectedUser?: PrismaUser | null;
-} = {
-  success: null,
-  message: null,
-  selectedUser: null,
-};
-
-const SetupModal = ({
-  showOtherUsers,
-  allUsers,
-}: {
-  showOtherUsers: boolean;
-  allUsers: PrismaUser[];
-}) => {
+const SetupModal = () => {
   const { toast } = useToast();
-  const { pending } = useFormStatus();
-
-  const [state, formAction] = useFormState(setupAction, initialState);
+  const router = useRouter();
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [email, setEmail] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [projectPrefix, setprojectPrefix] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    console.log(state);
+  const handleCreateNewProject = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
 
-    if (state.success === true) {
+    const saveProjectRes = await fetch(`/api/save-project`, {
+      method: 'POST',
+      body: JSON.stringify({
+        projectName,
+        projectPrefix,
+      }),
+    });
+
+    const saveProjectData = await saveProjectRes.json();
+
+    if (saveProjectData.success) {
       toast({
         variant: 'default',
-        title: state.message,
+        title: saveProjectData.message,
       });
-      setDialogOpen(false);
-      redirect(
-        `/${state.createdProjectId}/${state.createdProjectName}/dashboard`
-      );
-    }
 
-    if (state.success === false) {
+      const adminMetaRes = await fetch(`/api/save-metadata`, {
+        method: 'POST',
+        body: JSON.stringify({
+          isAdmin: true,
+          userId: saveProjectData?.userId,
+          projects: saveProjectData.adminProjects,
+        }),
+      });
+
+      const adminMetaData = await adminMetaRes.json();
+
+      if (adminMetaData.success) {
+        toast({
+          variant: 'default',
+          title: adminMetaData.message,
+        });
+
+        const checkUserExistsRes = await fetch(`/api/get-user?email=${email}`);
+
+        const checkUserExistsData = await checkUserExistsRes.json();
+
+        let userProjects: Project[];
+
+        if (checkUserExistsData.firstTimeUser) {
+          userProjects = saveProjectData.project;
+        } else {
+          if (checkUserExistsData?.user?.public_metadata?.projects) {
+            const alreadyExistedprojects = checkUserExistsData?.user
+              ?.public_metadata?.projects as Project[];
+
+            userProjects = [
+              ...alreadyExistedprojects,
+              ...saveProjectData.project,
+            ];
+          } else {
+            userProjects = saveProjectData.project;
+          }
+        }
+
+        if (checkUserExistsData.success) {
+          toast({
+            variant: 'default',
+            title: 'Email looked up successfully',
+          });
+
+          const inviteUserRes = await fetch('/api/invite-user', {
+            method: 'POST',
+            body: JSON.stringify({
+              email,
+              projects: userProjects,
+            }),
+          });
+
+          const inviteUserData = await inviteUserRes.json();
+
+          if (inviteUserData.success) {
+            toast({
+              variant: 'default',
+              title: inviteUserData.message,
+            });
+
+            await fetch('/api/save-unconfirmed-user', {
+              method: 'POST',
+              body: JSON.stringify({
+                email,
+                currentUserId: saveProjectData?.userId,
+                currentProject: saveProjectData.projectId,
+                projects: userProjects,
+              }),
+            });
+
+            // final!
+            setLoading(false);
+            setDialogOpen(false);
+            router.push(
+              `/${saveProjectData.project[0].id}/${saveProjectData.project[0].name}/dashboard`
+            );
+          } else {
+            toast({
+              variant: 'destructive',
+              title: inviteUserData.message,
+            });
+            setDialogOpen(false);
+            setLoading(false);
+          }
+        } else {
+          toast({
+            variant: 'destructive',
+            title: 'Something went wrong when performing email lookup',
+          });
+        }
+      } else {
+        toast({
+          variant: 'destructive',
+          title: adminMetaData.message,
+        });
+      }
+    } else {
       toast({
         variant: 'destructive',
-        title: state.message,
+        title: saveProjectData.message,
       });
-      setDialogOpen(false);
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  };
 
   return (
     <section className='mt-4'>
@@ -90,7 +161,7 @@ const SetupModal = ({
           <DialogHeader>
             <DialogTitle>Create Project</DialogTitle>
           </DialogHeader>
-          <form className='grid gap-4 py-4' action={formAction}>
+          <form className='grid gap-4 py-4' onSubmit={handleCreateNewProject}>
             <div className='grid grid-cols-4 items-center gap-4'>
               <Label htmlFor='name' className='text-right'>
                 Name
@@ -100,6 +171,8 @@ const SetupModal = ({
                 name='projectName'
                 placeholder='Name of your first project'
                 className='col-span-3'
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
               />
             </div>
             <div className='grid grid-cols-4 items-center gap-4'>
@@ -111,6 +184,8 @@ const SetupModal = ({
                 name='projectPrefix'
                 className='col-span-3'
                 placeholder='Prefix of the project'
+                value={projectPrefix}
+                onChange={(e) => setprojectPrefix(e.target.value)}
               />
             </div>
             <div className='grid grid-cols-4 items-center gap-4'>
@@ -121,49 +196,14 @@ const SetupModal = ({
                 name='email'
                 placeholder='Email ID of your first team member'
                 className='col-span-3'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
-            {showOtherUsers && allUsers.length >= 1 && (
-              <>
-                <Separator className='mt-4' />
-                <p className='text-center'>
-                  or select existing user instead of email invite
-                </p>
-                <section className='grid grid-cols-4 items-center gap-4'>
-                  <Label htmlFor='username' className='text-right'>
-                    User
-                  </Label>
-                  <Select>
-                    <SelectTrigger className='col-span-3'>
-                      <SelectValue placeholder='Existing user' />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectLabel>Users</SelectLabel>
-                        {allUsers.map((item) => {
-                          return (
-                            <SelectItem
-                              value={item.username!}
-                              key={item.id}
-                              onSelect={() => {
-                                initialState.selectedUser = item;
-                              }}
-                            >
-                              {item.username}
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </section>
-              </>
-            )}
             <DialogFooter>
-              {/* <Button type='submit' aria-disabled={pending}>
-                {pending ? 'Loading...' : 'Create and Invite'}
-              </Button> */}
-              <SetupButton />
+              <Button type='submit' disabled={loading}>
+                {loading ? 'Loading...' : 'Create and Invite'}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>

@@ -66,14 +66,19 @@ export const getUserStatus = (tasks: Task[]) => {
   });
 
   const userLabels: string[] = Object.keys(userStatusCount);
-  const seriesData = Object.keys(userStatusCount[userLabels[0]]).map(
-    (statusName) => ({
-      name: statusName,
-      data: userLabels.map(
-        (userId) => userStatusCount[userId][statusName] || 0
-      ),
-    })
-  );
+  let seriesData: any[];
+  if (tasks.length >= 1) {
+    seriesData = Object.keys(userStatusCount[userLabels[0]]).map(
+      (statusName) => ({
+        name: statusName,
+        data: userLabels.map(
+          (userId) => userStatusCount[userId][statusName] || 0
+        ),
+      })
+    );
+  } else {
+    seriesData = [];
+  }
 
   return { userLabels, seriesData };
 };

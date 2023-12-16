@@ -33,7 +33,7 @@ const SprintsPage = async ({ params }: { params: Params }) => {
             blurDataURL='/empty-state.svg'
           />
           <p className='my-5 text-xl text-center'>
-            No sprints added, start sprint it by adding a new sprint
+            No sprints created yet, start sprint it by adding a new sprint
           </p>
           <Button>
             <Link

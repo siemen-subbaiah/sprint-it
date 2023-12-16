@@ -35,12 +35,23 @@ export const POST = async (request: Request) => {
     const data = await res.json();
 
     if (data.errors) {
-      return NextResponse.json({ success: false, data });
+      return NextResponse.json({
+        success: false,
+        data,
+        message: 'Something went wrong when inviting user',
+      });
     }
 
-    return NextResponse.json({ success: true, data });
+    return NextResponse.json({
+      success: true,
+      data,
+      message: 'User invited successfully',
+    });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ success: false });
+    return NextResponse.json({
+      success: false,
+      message: 'Something went wrong when inviting user',
+    });
   }
 };
