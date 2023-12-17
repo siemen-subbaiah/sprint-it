@@ -1,7 +1,7 @@
 import CardLoader from '@/components/loaders/CardLoader';
 import React from 'react';
 
-const SprintsPageLoader = () => {
+const loading = () => {
   return (
     <section className='mt-20'>
       <CardLoader />
@@ -9,4 +9,4 @@ const SprintsPageLoader = () => {
   );
 };
 
-export default SprintsPageLoader;
+export default loading;

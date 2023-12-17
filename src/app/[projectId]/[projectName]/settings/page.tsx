@@ -10,6 +10,8 @@ import { currentUser } from '@clerk/nextjs';
 import { revalidatePath } from 'next/cache';
 import { Metadata } from 'next';
 import React from 'react';
+import { User } from '@prisma/client';
+import SubmitButton from '@/components/submit/SubmitButton';
 
 export const metadata: Metadata = {
   title: 'Sprint it | Settings',
@@ -39,6 +41,30 @@ const SettingsPage = async ({ params }: { params: any }) => {
       },
     },
   });
+
+  const users = await prisma.user.findMany({
+    where: {
+      isConfirmed: true,
+    },
+  });
+
+  const removeDuplicates = (users: User[]) => {
+    const uniqueClerkUserIds = new Set();
+    const deduplicatedArray: User[] = [];
+
+    users.forEach((item) => {
+      if (!uniqueClerkUserIds.has(item.clerkUserId)) {
+        uniqueClerkUserIds.add(item.clerkUserId);
+        deduplicatedArray.push(item);
+      }
+    });
+
+    return deduplicatedArray;
+  };
+
+  const allUsers = removeDuplicates(users).filter(
+    (item) => item.email !== clerkUser?.emailAddresses[0]?.emailAddress
+  );
 
   const handleUserEdit = async (formData: FormData) => {
     'use server';
@@ -75,7 +101,7 @@ const SettingsPage = async ({ params }: { params: any }) => {
               type='text'
               id='username'
               name='username'
-              value={user[0]?.username!}
+              defaultValue={user[0]?.username!}
             />
           </div>
           <div className='mt-8'>
@@ -84,12 +110,12 @@ const SettingsPage = async ({ params }: { params: any }) => {
               id='bio'
               className='h-32'
               name='bio'
-              value={user[0]?.bio!}
+              defaultValue={user[0]?.bio!}
             />
           </div>
-          <Button className='mt-5' type='submit'>
-            Save
-          </Button>
+          <section className='mt-5'>
+            <SubmitButton title='save' />
+          </section>
         </form>
       </section>
 
@@ -98,7 +124,7 @@ const SettingsPage = async ({ params }: { params: any }) => {
           <Separator className='my-4' />
           <div className='mb-5'>
             <h1 className='text-2xl'>Create new project</h1>
-            <SetupModal />
+            <SetupModal showOtherUsers={true} allUsers={allUsers} />
           </div>
         </section>
       )}

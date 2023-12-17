@@ -2,7 +2,7 @@ import React from 'react';
 
 const CardLoader = () => {
   return (
-    <section className='mt-5 grid md:grid-cols-3 grid-cols-1 gap-8'>
+    <section className='grid md:grid-cols-3 grid-cols-1 gap-8'>
       <div
         role='status'
         className='max-w-sm p-4 border border-gray-200 rounded shadow animate-pulse md:p-6 dark:border-gray-700'

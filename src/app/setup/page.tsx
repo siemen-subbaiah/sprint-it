@@ -27,7 +27,7 @@ const SetupPage = async () => {
         Create you first project and invite your first team member!
       </h1>
 
-      <SetupModal />
+      <SetupModal showOtherUsers={false} allUsers={[]} />
     </section>
   );
 };

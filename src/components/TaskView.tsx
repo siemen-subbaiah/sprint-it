@@ -78,8 +78,8 @@ const TaskView = async ({
                         Are you sure you want to delete?
                       </AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action cannot be undone. This will permanently the
-                        task.
+                        This action cannot be undone. This will permanently
+                        delete the task.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <form action={handleDeleteTask}>
@@ -126,8 +126,8 @@ const TaskView = async ({
                     Are you sure you want to delete?
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    This action cannot be undone. This will permanently the
-                    task.
+                    This action cannot be undone. This will permanently delete
+                    the task.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <form action={handleDeleteTask}>

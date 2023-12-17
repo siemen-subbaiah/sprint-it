@@ -1,7 +1,8 @@
+import PageLoader from '@/components/loaders/PageLoader';
 import React from 'react';
 
 const SprintDetailPageLoading = () => {
-  return <div>SprintDetailPageLoading...</div>;
+  return <PageLoader />;
 };
 
 export default SprintDetailPageLoading;

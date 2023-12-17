@@ -1,8 +1,8 @@
 import PageLoader from '@/components/loaders/PageLoader';
 import React from 'react';
 
-const SettingsLoading = () => {
+const loading = () => {
   return <PageLoader />;
 };
 
-export default SettingsLoading;
+export default loading;

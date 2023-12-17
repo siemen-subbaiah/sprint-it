@@ -26,11 +26,14 @@ const AddSprintPage = ({ params }: { params: Params }) => {
   const [startDate, setStartDate] = useState<Date>();
   const [endDate, setEndDate] = useState<Date>();
 
+  const [loading, setLoading] = useState(false);
+
   const router = useRouter();
   const { toast } = useToast();
 
   const handleSprintCreate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
 
     const res = await fetch('/api/save-sprint', {
       method: 'POST',
@@ -46,12 +49,15 @@ const AddSprintPage = ({ params }: { params: Params }) => {
     const data = await res.json();
 
     if (data.success) {
+      setLoading(false);
       router.push(`/${params.projectId}/${params.projectName}/sprints`);
       toast({
         variant: 'default',
         title: data.message,
       });
     } else {
+      setLoading(false);
+
       toast({
         variant: 'destructive',
         title: data.message,
@@ -142,8 +148,8 @@ const AddSprintPage = ({ params }: { params: Params }) => {
             </Popover>
           </div>
         </div>
-        <Button className='mt-10' type='submit'>
-          Start
+        <Button className='mt-10' type='submit' disabled={loading}>
+          {loading ? 'Loading...' : 'Start'}
         </Button>
       </form>
     </section>

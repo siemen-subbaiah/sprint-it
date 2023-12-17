@@ -1,15 +1,17 @@
+'use client';
+
 import React from 'react';
 import { Button } from '../ui/button';
 import { useFormStatus } from 'react-dom';
 
-const SetupButton = () => {
+const SubmitButton = ({ title }: { title: string }) => {
   const { pending } = useFormStatus();
 
   return (
     <Button type='submit' disabled={pending}>
-      Create and Invite
+      {pending ? 'Loading...' : title}
     </Button>
   );
 };
 
-export default SetupButton;
+export default SubmitButton;

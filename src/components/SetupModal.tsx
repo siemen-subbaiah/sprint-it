@@ -15,8 +15,25 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Separator } from './ui/separator';
+import { User } from '@prisma/client';
 
-const SetupModal = () => {
+const SetupModal = ({
+  showOtherUsers,
+  allUsers,
+}: {
+  showOtherUsers: boolean;
+  allUsers: PrismaUser[];
+}) => {
   const { toast } = useToast();
   const router = useRouter();
 
@@ -24,6 +41,7 @@ const SetupModal = () => {
   const [email, setEmail] = useState('');
   const [projectName, setProjectName] = useState('');
   const [projectPrefix, setprojectPrefix] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleCreateNewProject = async (e: FormEvent<HTMLFormElement>) => {
@@ -63,7 +81,9 @@ const SetupModal = () => {
           title: adminMetaData.message,
         });
 
-        const checkUserExistsRes = await fetch(`/api/get-user?email=${email}`);
+        const checkUserExistsRes = await fetch(
+          `/api/get-user?email=${selectedUser ? selectedUser : email}`
+        );
 
         const checkUserExistsData = await checkUserExistsRes.json();
 
@@ -91,45 +111,92 @@ const SetupModal = () => {
             title: 'Email looked up successfully',
           });
 
-          const inviteUserRes = await fetch('/api/invite-user', {
-            method: 'POST',
-            body: JSON.stringify({
-              email,
-              projects: userProjects,
-            }),
-          });
-
-          const inviteUserData = await inviteUserRes.json();
-
-          if (inviteUserData.success) {
-            toast({
-              variant: 'default',
-              title: inviteUserData.message,
-            });
-
-            await fetch('/api/save-unconfirmed-user', {
+          if (checkUserExistsData.firstTimeUser) {
+            const inviteUserRes = await fetch('/api/invite-user', {
               method: 'POST',
               body: JSON.stringify({
                 email,
-                currentUserId: saveProjectData?.userId,
-                currentProject: saveProjectData.projectId,
                 projects: userProjects,
               }),
             });
 
-            // final!
-            setLoading(false);
-            setDialogOpen(false);
-            router.push(
-              `/${saveProjectData.project[0].id}/${saveProjectData.project[0].name}/dashboard`
-            );
+            const inviteUserData = await inviteUserRes.json();
+
+            if (inviteUserData.success) {
+              toast({
+                variant: 'default',
+                title: inviteUserData.message,
+              });
+
+              await fetch('/api/save-unconfirmed-user', {
+                method: 'POST',
+                body: JSON.stringify({
+                  email,
+                  currentUserId: saveProjectData?.userId,
+                  currentProject: saveProjectData.projectId,
+                  projects: userProjects,
+                }),
+              });
+
+              // final!
+              setLoading(false);
+              setDialogOpen(false);
+              router.push(
+                `/${saveProjectData.project[0].id}/${saveProjectData.project[0].name}/dashboard`
+              );
+            } else {
+              toast({
+                variant: 'destructive',
+                title: inviteUserData.message,
+              });
+              setDialogOpen(false);
+              setLoading(false);
+            }
           } else {
-            toast({
-              variant: 'destructive',
-              title: inviteUserData.message,
+            // adding an existing user to a new project!
+
+            const userMetaRes = await fetch(`/api/save-metadata`, {
+              method: 'POST',
+              body: JSON.stringify({
+                isAdmin: false,
+                userId: checkUserExistsData?.user?.id,
+                projects: userProjects,
+              }),
             });
-            setDialogOpen(false);
-            setLoading(false);
+
+            const userMetaData = await userMetaRes.json();
+
+            if (userMetaData.success) {
+              toast({
+                variant: 'default',
+                title: 'Project created successfully and added existing user',
+              });
+
+              const userRes = await fetch('/api/save-confirmed-user', {
+                method: 'POST',
+                body: JSON.stringify({
+                  selectedUser: checkUserExistsData?.user,
+                  currentUserId: saveProjectData?.userId,
+                  currentProject: saveProjectData.projectId,
+                }),
+              });
+
+              const userData = await userRes.json();
+
+              // final!
+              if (userData.success) {
+                setLoading(false);
+                setDialogOpen(false);
+                router.push(
+                  `/${saveProjectData.project[0].id}/${saveProjectData.project[0].name}/dashboard`
+                );
+              }
+            } else {
+              toast({
+                variant: 'destructive',
+                title: userMetaData.message,
+              });
+            }
           }
         } else {
           toast({
@@ -200,6 +267,40 @@ const SetupModal = () => {
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
+            {showOtherUsers && allUsers.length >= 1 && (
+              <>
+                <Separator className='mt-4' />
+                <p className='text-center'>
+                  or select existing user instead of email invite
+                </p>
+                <section className='grid grid-cols-4 items-center gap-4'>
+                  <Label htmlFor='username' className='text-right'>
+                    User
+                  </Label>
+                  <Select
+                    onValueChange={(value) => {
+                      setSelectedUser(value);
+                    }}
+                  >
+                    <SelectTrigger className='col-span-3'>
+                      <SelectValue placeholder='Existing user' />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>Users</SelectLabel>
+                        {allUsers.map((item) => {
+                          return (
+                            <SelectItem value={item.email} key={item.id}>
+                              {item.username}
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </section>
+              </>
+            )}
             <DialogFooter>
               <Button type='submit' disabled={loading}>
                 {loading ? 'Loading...' : 'Create and Invite'}

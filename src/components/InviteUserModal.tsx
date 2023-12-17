@@ -22,10 +22,12 @@ const InviteUserModal = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const { toast } = useToast();
 
   const handleEmailInvite = async () => {
+    setLoading(true);
     const checkUserExistsRes = await fetch(`/api/get-user?email=${email}`);
 
     const checkUserExistsData = await checkUserExistsRes.json();
@@ -88,6 +90,7 @@ const InviteUserModal = ({
     }
 
     setOpen(false);
+    setLoading(false);
   };
 
   return (
@@ -111,8 +114,8 @@ const InviteUserModal = ({
           />
         </div>
         <DialogFooter>
-          <Button type='submit' onClick={handleEmailInvite}>
-            Invite
+          <Button type='submit' onClick={handleEmailInvite} disabled={loading}>
+            {loading ? 'Loading...' : 'Invite'}
           </Button>
         </DialogFooter>
       </DialogContent>

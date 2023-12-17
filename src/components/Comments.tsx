@@ -18,7 +18,7 @@ import {
   AlertDialogTrigger,
   AlertDialogPortal,
 } from '@/components/ui/alert-dialog';
-import CommentButton from './submit/CommentButton';
+import SubmitButton from './submit/SubmitButton';
 
 const Comments = ({
   taskId,
@@ -92,7 +92,7 @@ const Comments = ({
                             </AlertDialogTitle>
                             <AlertDialogDescription>
                               This action cannot be undone. This will
-                              permanently the task.
+                              permanently delete the comment.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <form action={() => handleDeleteComment(item?.id)}>
@@ -124,7 +124,9 @@ const Comments = ({
           value={comment}
           onChange={(e) => setComment(e.target.value)}
         />
-        <CommentButton />
+        <section className='mt-5'>
+          <SubmitButton title='Comment' />
+        </section>
       </form>
     </>
   );

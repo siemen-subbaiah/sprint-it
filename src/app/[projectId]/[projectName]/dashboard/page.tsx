@@ -36,7 +36,7 @@ const DashboardPage = async ({ params }: { params: Params }) => {
       },
     });
 
-    if (user) {
+    if (user.length >= 1) {
       if (!user[0].isConfirmed) {
         await prisma.user.update({
           where: {

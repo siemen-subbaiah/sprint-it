@@ -105,11 +105,13 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
       </p>
       <p className='mt-6'>Project Name : {associatedProject?.name}</p>
       <p className='mt-4'>Total Estimation Points : {totalPoints}</p>
-      <h1 className='text-2xl text-[#0072F5] mt-6'>Description</h1>
+      <Separator className='my-4' />
+      <h1 className='text-2xl text-[#0072F5] mt-3'>Description</h1>
       <p className='mt-4'>{sprint?.sprintDescription}</p>
+      <Separator className='my-4' />
       <section className='flex gap-3 items-baseline justify-between'>
-        <h1 className='text-2xl text-[#0072F5] mt-6'>Items</h1>
-        <Button>
+        <h1 className='text-2xl text-[#0072F5] mt-3'>Items</h1>
+        <Button variant='secondary'>
           <Link
             href={`/${params.projectId}/${params.projectName}/sprints/add-task`}
           >
@@ -129,6 +131,7 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
           );
         })}
       </section>
+      <Separator className='my-4' />
       <AlertDialog>
         <AlertDialogTrigger asChild>
           <Button className='mb-5'>End Sprint</Button>
@@ -141,7 +144,8 @@ const SprintDetailPage = async ({ params }: { params: Params }) => {
                 Are you sure you want to end sprint?
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently the task.
+                This action cannot be undone. This will permanently end the
+                sprint.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <form action={handleEndSprint}>
