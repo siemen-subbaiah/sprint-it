@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Users',
+  title: 'Users',
   description: 'The place where you view all the users of sprint it',
 };
 

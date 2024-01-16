@@ -5,7 +5,7 @@ import { auth } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Setup',
+  title: 'Setup',
 };
 
 const SetupPage = async () => {

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation';
 import React from 'react';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Edit Task',
+  title: 'Edit Task',
   description: 'The place where you edit a task in sprint it',
 };
 

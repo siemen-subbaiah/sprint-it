@@ -10,8 +10,23 @@ import Header from '@/components/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Sprint it',
+  metadataBase: new URL('https://sprintit.online'),
+  title: {
+    template: '%s | Sprint it',
+    default: 'Sprint it',
+  },
   description: 'The only sprint app you need',
+  openGraph: {
+    title: 'Sprint it',
+    description: 'The only sprint app you need',
+    siteName: 'Sprint it',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Sprint it',
+    description: 'The only sprint app you need',
+    creator: '@siemen_subbaiah',
+  },
 };
 
 export default function RootLayout({

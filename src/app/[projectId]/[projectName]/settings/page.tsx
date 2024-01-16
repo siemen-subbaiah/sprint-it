@@ -14,7 +14,7 @@ import { User } from '@prisma/client';
 import SubmitButton from '@/components/submit/SubmitButton';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Settings',
+  title: 'Settings',
   description: 'The place where you can view the settings of sprint it',
 };
 

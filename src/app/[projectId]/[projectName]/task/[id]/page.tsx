@@ -9,7 +9,7 @@ import React from 'react';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Task Details',
+  title: 'Task Details',
   description: 'The place where you view a task in sprint it',
 };
 

@@ -13,7 +13,7 @@ import Image from 'next/image';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Board',
+  title: 'Board',
   description: 'The place where you view the board of sprint it',
 };
 

@@ -9,7 +9,7 @@ import React from 'react';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Sprints',
+  title: 'Sprints',
   description: 'The place where you can view all the sprints of sprint it',
 };
 

@@ -14,7 +14,7 @@ import TaskType from '@/components/dashboard/TaskType';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Dashboard',
+  title: 'Dashboard',
   description: 'The beautifully crafted dashboard for sprint it',
 };
 

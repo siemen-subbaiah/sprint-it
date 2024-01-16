@@ -9,7 +9,7 @@ import React from 'react';
 export const revalidate = 0;
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Backlog',
+  title: 'Backlog',
   description: 'The backlog page of sprint it',
 };
 

@@ -5,7 +5,7 @@ import React from 'react';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Sprint it | Edit Task',
+  title: 'Edit Task',
   description: 'The place where you edit a task in sprint it',
 };
 
