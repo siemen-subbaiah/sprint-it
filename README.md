@@ -11,7 +11,7 @@ A task management web app with features like adding projects, sprints, tasks etc
 
 ## Features 
 
-- Login/Signup through Google and Google
+- Login/Signup through Google and Github
 - Inviting users through email
 - Adding multiple projects, sprints, tasks, adding task to backlog
 - Dashboard about the entire project
