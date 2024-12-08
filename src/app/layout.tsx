@@ -10,7 +10,7 @@ import Header from '@/components/Header';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://sprintit.online'),
+  metadataBase: new URL('https://sprintit.site'),
   title: {
     template: '%s | Sprint it',
     default: 'Sprint it',
