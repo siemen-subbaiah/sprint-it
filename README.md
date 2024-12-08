@@ -2,7 +2,7 @@
 
 A task management web app with features like adding projects, sprints, tasks etc
 
-[Demo](https://sprintit.online)
+[Demo](https://sprintit.site)
 
 ![image](https://github.com/siemen-subbaiah/sprint-it/assets/62604902/07bf2248-f516-4ce5-bd44-74db13bbac76)
 
